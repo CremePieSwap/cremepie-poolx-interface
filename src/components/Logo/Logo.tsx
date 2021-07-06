@@ -7,8 +7,8 @@ import CremePieLogo from '../../assets/img/cremepie.svg'
 const Logo: React.FC = () => {
   return (
     <StyledLogo to="/">
-      <img className="d-sm-none" src={CremePieLogo} height="45" style={{ marginTop: -4 }} />
-      <img className="d-md-none" src={CremePieLogo} height="40" style={{ marginTop: -4 }} />
+      <img className="d-sm-none" src={CremePieLogo} width="160"/>
+      <img className="d-md-none" src={CremePieLogo} width="160"/>
     </StyledLogo>
   )
 }

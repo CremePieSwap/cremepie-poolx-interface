@@ -1,9 +1,10 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import Container from '../Container'
 import Logo from '../Logo'
-import MenuIcon from '../../assets/img/menu.svg'
+import MenuOpen from '../../assets/img/menu_open.svg'
+import MenuClose from '../../assets/img/menu_close.svg'
 
 import AccountButton from './components/AccountButton'
 import Nav from './components/Nav'
@@ -16,34 +17,36 @@ const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu }) => {
   const [showMenu, setShowMenu] = useState(false)
   return (
     <StyledTopBar>
-      <Container size="lg">
-        <StyledTopBarInner>
-          <div style={{display: 'flex', alignItems: 'center'}}>
-            <StyledLogoWrapper>
-              <Logo />
-            </StyledLogoWrapper>
-            <WrapMenuDesktop>
-              <Nav showMenu={showMenu} />
-            </WrapMenuDesktop>
-          </div>
-          <StyledAccountButtonWrapper>
-            <AccountButton />
+      {/* <Container size="lg"> */}
+      <StyledTopBarInner>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <StyledLogoWrapper>
             <WrapIconMenu>
-              <img onClick={()=> setShowMenu(!showMenu)} className="d-md-none" src={MenuIcon} width="25" style={{  marginLeft: '10px', marginTop: '5px', cursor: 'pointer' }} />
-          </WrapIconMenu>
-          </StyledAccountButtonWrapper>
-        </StyledTopBarInner>
-        <WrapMenuMobile>
-          <Nav showMenu={showMenu} />
-        </WrapMenuMobile>
-      </Container>
+              <img
+                onClick={() => setShowMenu(!showMenu)}
+                src={showMenu ? MenuOpen : MenuClose}
+                width="25"
+                style={{ cursor: 'pointer' }}
+              />
+            </WrapIconMenu>
+            <Logo />
+          </StyledLogoWrapper>
+        </div>
+        <StyledAccountButtonWrapper>
+          <AccountButton />
+        </StyledAccountButtonWrapper>
+      </StyledTopBarInner>
+      <WrapMenuMobile>
+        <Nav showMenu={showMenu} />
+      </WrapMenuMobile>
+      {/* </Container> */}
     </StyledTopBar>
   )
 }
 
 const StyledLogoWrapper = styled.div`
-  width: 180px;
   padding: 10px 0;
+  display: flex;
   @media (max-width: 767px) {
     width: auto;
   }
@@ -63,11 +66,10 @@ const WrapMenuMobile = styled.div`
 `
 
 const WrapIconMenu = styled.div`
-  display: none;
-
-  @media (max-width: 767px) {
-    display: block;
-  }
+  width: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 const StyledTopBar = styled.div`
@@ -77,10 +79,13 @@ const StyledTopBar = styled.div`
 const StyledTopBarInner = styled.div`
   align-items: center;
   display: flex;
-  // height: ${(props) => props.theme.topBarSize}px;
+  height: ${(props) => props.theme.topBarSize}px;
   justify-content: space-between;
-  max-width: ${(props) => props.theme.siteWidth}px;
-  width: 100%;
+  padding-right: 16px;
+  background: rgb(50, 50, 50);
+  border-bottom: 2px solid rgba(133, 133, 133, 0.1);
+  z-index: 20;
+  transform: translate3d(0px, 0px, 0px);
 `
 const StyledNavWrapper = styled.div`
   display: flex;
