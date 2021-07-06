@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
-import { ThemeProvider } from 'styled-components'
+import styled, { ThemeProvider } from 'styled-components'
+import { isMobile } from 'react-device-detect'
 import { UseWalletProvider } from 'use-wallet'
 import DisclaimerModal from './components/DisclaimerModal'
-import MobileMenu from './components/MobileMenu'
 import TopBar from './components/TopBar'
 import FarmsProvider from './contexts/Farms'
 import ModalsProvider from './contexts/Modals'
@@ -15,33 +15,28 @@ import Farms from './views/Farms'
 import Home from './views/Home'
 import Referral from './views/Referral'
 import config from './config'
+import Menu from './components/Menu'
 
 const App: React.FC = () => {
-  const [mobileMenu, setMobileMenu] = useState(false)
-
-  const handleDismissMobileMenu = useCallback(() => {
-    setMobileMenu(false)
-  }, [setMobileMenu])
-
-  const handlePresentMobileMenu = useCallback(() => {
-    setMobileMenu(true)
-  }, [setMobileMenu])
+  const [showMenu, setShowMenu] = useState(true)
   localStorage.setItem('CACHE_BSC_TRY_CONNECT', '0')
   return (
     <Providers>
-      <TopBar onPresentMobileMenu={handlePresentMobileMenu} />
-      <MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
-      <Switch>
-        <Route path="/" exact>
-          <Home />
-        </Route>
-        <Route path="/farms">
-          <Farms />
-        </Route>
-        <Route path="/referral">
-          <Referral />
-        </Route>
-      </Switch>
+      <TopBar onClickMenu={() => setShowMenu(!showMenu)} showMenu={showMenu}/>
+      <Menu visible={showMenu}/>
+      <BodyWrapper showMenu={showMenu}>
+        <Switch>
+          <Route path="/" exact>
+            <Home />
+          </Route>
+          <Route path="/farms">
+            <Farms />
+          </Route>
+          <Route path="/referral">
+            <Referral />
+          </Route>
+        </Switch>
+      </BodyWrapper>
       <Disclaimer />
     </Providers>
   )
@@ -88,5 +83,23 @@ const Disclaimer: React.FC = () => {
 
   return <div />
 }
+
+const BodyWrapper = styled.div<{ showMenu: boolean }>`
+  display: flex;
+  flex-direction: column;
+  margin-left: ${({ showMenu }) => isMobile ? '0' : showMenu ? '240px' : '56px'};
+  max-width: ${({ showMenu }) => isMobile ? '100vw' : showMenu ? 'calc(100vw - 240px)' : 'calc(100vw - 56px)'};
+  margin-top: 64px;
+  padding-top: 50px;
+  align-items: center;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1;
+  @media (max-width: 767px) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+`
 
 export default App

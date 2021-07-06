@@ -27,7 +27,7 @@ const theme = {
     6: 48,
     7: 64,
   },
-  topBarSize: 72
+  topBarSize: 62
 }
 
 export default theme

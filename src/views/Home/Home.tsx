@@ -13,7 +13,7 @@ import Balances from './components/Balances'
 import CustomCountDown from './components/CustomCountDown'
 import Icon_Tip from '../../assets/img/pro-tip-icon.svg'
 import { START_REWARD_AT_BLOCK, LP_BALANCE_LV1, LP_BALANCE_LV2 } from '../../sushi/lib/constants'
-import BscxLogo from '../../assets/img/logo-icon.svg'
+import Logo from '../../assets/img/cremepie.svg'
 import CopyIcon from '../../assets/img/copy.png'
 import FarmCards from '../Farms/components/FarmCards'
 import TotalLockValue from './components/TotalLockValue'
@@ -82,7 +82,7 @@ const Home: React.FC = () => {
         <SpacerRes>
             <Spacer size="lg" />
             <StyledLogo>
-                <img className="d-md-none" src={BscxLogo} height="120" style={{ marginTop: -4 }} />
+                <img className="d-md-none" src={Logo} height="120" style={{ marginTop: -4 }} />
             </StyledLogo>
         </SpacerRes>
         <div style={{fontWeight: 'bold', fontSize: 22, color: '#ffffff'}}>
