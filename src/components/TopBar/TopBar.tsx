@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import Container from '../Container'
 import Logo from '../Logo'
 import MenuOpen from '../../assets/img/menu_open.svg'
 import MenuClose from '../../assets/img/menu_close.svg'
@@ -17,7 +16,6 @@ const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu }) => {
   const [showMenu, setShowMenu] = useState(false)
   return (
     <StyledTopBar>
-      {/* <Container size="lg"> */}
       <StyledTopBarInner>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <StyledLogoWrapper>
@@ -39,7 +37,6 @@ const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu }) => {
       <WrapMenuMobile>
         <Nav showMenu={showMenu} />
       </WrapMenuMobile>
-      {/* </Container> */}
     </StyledTopBar>
   )
 }
@@ -49,12 +46,6 @@ const StyledLogoWrapper = styled.div`
   display: flex;
   @media (max-width: 767px) {
     width: auto;
-  }
-`
-
-const WrapMenuDesktop = styled.div`
-  @media (max-width: 767px) {
-    display: none;
   }
 `
 
@@ -87,14 +78,6 @@ const StyledTopBarInner = styled.div`
   z-index: 20;
   transform: translate3d(0px, 0px, 0px);
 `
-const StyledNavWrapper = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  @media (max-width: 767px) {
-    display: none;
-  }
-`
 
 const StyledAccountButtonWrapper = styled.div`
   align-items: center;
@@ -104,22 +87,6 @@ const StyledAccountButtonWrapper = styled.div`
   @media (max-width: 767px) {
     justify-content: center;
     width: auto;
-  }
-`
-
-const StyledMenuButton = styled.button`
-  background: none;
-  border: 0;
-  margin: 0;
-  outline: 0;
-  padding: 0;
-  display: none;
-  @media (max-width: 767px) {
-    align-items: center;
-    display: flex;
-    height: 44px;
-    justify-content: center;
-    width: 44px;
   }
 `
 

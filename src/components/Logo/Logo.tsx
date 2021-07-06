@@ -17,8 +17,6 @@ const StyledLogo = styled(Link)`
     align-items: center;
     display: flex;
     margin: 0;
-    min-height: 44px;
-    min-width: 44px;
     padding: 0;
     text-decoration: none;
     .d-sm-none {
