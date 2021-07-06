@@ -3,6 +3,10 @@ import styled, { keyframes } from 'styled-components'
 import { isMobile } from 'react-device-detect'
 import { NavLink } from 'react-router-dom'
 
+import Home from '../../assets/img/home_icon.svg'
+import Trade from '../../assets/img/trade_icon.svg'
+import Pools from '../../assets/img/pools_icon.svg'
+import Active from '../../assets/img/active_menu.svg'
 interface MenuProps {
   onDismiss?: () => void
   visible?: boolean
@@ -12,34 +16,26 @@ const Menu: React.FC<MenuProps> = ({ onDismiss, visible }) => {
   return (
     <StyledMenuWrapper className={isMobile ? visible ? 'show mobile': 'hide': visible ? 'show' : 'minimize'}>
       <StyledMenu>
-        <StyledLink exact activeClassName="active" to="/" onClick={onDismiss}>
+        <StyledNavLink exact activeClassName="active" to="/" onClick={onDismiss}>
+          <img className='active' src={Active} alt="active" />
+          <img src={Home} alt="home" />
           Home
-        </StyledLink>
-
+        </StyledNavLink>
         <StyledAbsoluteLink href="https://swap.bscex.org/#/swap">
-          Swap
+          <img className='active' src={Active} alt="active" />
+          <img src={Trade} alt="trade" />
+          Trade
+        </StyledAbsoluteLink>
+        <StyledAbsoluteLink href="https://swap.bscex.org/#/swap">
+          <img className='active' src={Active} alt="active" />
+          <img src={Pools} alt="pools" />
+          Pools
         </StyledAbsoluteLink>
       </StyledMenu>
     </StyledMenuWrapper>
   )
 }
-const StyledAbsoluteLink = styled.a`
-  color: ${(props) => props.theme.color.white};
-  font-weight: 700;
-  padding-left: ${(props) => props.theme.spacing[3]}px;
-  padding-right: ${(props) => props.theme.spacing[3]}px;
-  text-decoration: none;
-  &:hover {
-    color: #ffffff;
-  }
-  &.active {
-    color: ${(props) => props.theme.color.primary.main};
-  }
-  @media (max-width: 767px) {
-    padding-left: ${(props) => props.theme.spacing[2]}px;
-    padding-right: ${(props) => props.theme.spacing[2]}px;
-  }
-`
+
 const StyledBackdrop = styled.div`
   background-color: ${(props) => props.theme.color.grey[600]}aa;
   position: absolute;
@@ -57,6 +53,12 @@ const StyledMenuWrapper = styled.div`
   z-index: 1;
   background-color: #323232;
   height: 100%;
+  transition: padding-top 0.2s ease 0s, width 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+  border-right: 0px;
+  overflow: hidden;
+  transform: translate3d(0px, 0px, 0px);
+  white-space: nowrap;
+  display: block;
   &.show {
     display: block;
     width: 240px;
@@ -80,53 +82,72 @@ const slideIn = keyframes`
 `
 
 const StyledMenu = styled.div`
-  // animation: ${slideIn} 0.3s forwards ease-out;
-  // background-color: ${(props) => props.theme.color.grey[200]};
-  // display: flex;
-  // flex: 1;
-  // flex-direction: column;
-  // justify-content: center;
-  // position: absolute;
-  // top: 0;
-  // left: 100%;
-  // bottom: 0;
-  // width: calc(100% - 48px);
 `
 
-const StyledLink = styled(NavLink)`
-  box-sizing: border-box;
-  color: ${(props) => props.theme.color.grey[100]};
-  font-size: 24px;
-  font-weight: 700;
-  padding: ${(props) => props.theme.spacing[3]}px
-    ${(props) => props.theme.spacing[4]}px;
-  text-align: center;
+const StyledNavLink = styled(NavLink).attrs({
+  activeClassName: 'active'
+})`
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  overflow: hidden;
   text-decoration: none;
-  width: 100%;
-  &:hover {
-    color: ${(props) => props.theme.color.grey[500]};
+  font-weight: 600;
+  color: #FAE8BA;
+  :hover {
+    color: #50E3C2;
+    background: #89DBC420;
+    cursor: pointer;
   }
+  > img {
+    width: 25px;
+    margin-right: 1rem;
+    &.active {
+      display: none;
+    }
+  }
+
   &.active {
-    color: ${(props) => props.theme.color.primary.main};
+    > img {
+      &.active {
+        display: block;
+        position: absolute;
+        left: 0;
+        width: 18px;
+      }
+    }
+`
+const StyledAbsoluteLink = styled.a`
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  overflow: hidden;
+  text-decoration: none;
+  font-weight: 600;
+  color: #FAE8BA;
+  :hover {
+    color: #50E3C2;
+    background: #89DBC420;
+    cursor: pointer;
   }
+  > img {
+    width: 25px;
+    margin-right: 1rem;
+    &.active {
+      display: none;
+    }
+  }
+
+  &.active {
+    > img {
+      &.active {
+        display: block;
+        position: absolute;
+        left: 0;
+        width: 18px;
+      }
+    }
 `
 
-const StyledLink2 = styled(NavLink)`
-  box-sizing: border-box;
-  color: ${(props) => props.theme.color.grey[100]};
-  font-size: 24px;
-  font-weight: 700;
-  padding: ${(props) => props.theme.spacing[3]}px
-    ${(props) => props.theme.spacing[4]}px;
-  text-align: center;
-  text-decoration: none;
-  width: 100%;
-  &:hover {
-    color: ${(props) => props.theme.color.grey[500]};
-  }
-  &.active {
-    color: ${(props) => props.theme.color.primary.main};
-  }
-`
 
 export default Menu
