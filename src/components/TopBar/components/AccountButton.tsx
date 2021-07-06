@@ -3,9 +3,9 @@ import styled from 'styled-components'
 import { useWallet } from 'use-wallet'
 import useModal from '../../../hooks/useModal'
 import useSaveCountry from '../../../hooks/useSaveCountry'
-import Button from '../../Button'
 import WalletProviderModal from '../../WalletProviderModal'
 import AccountModal from './AccountModal'
+import CremeToken from '../../../assets/img/creme_token.svg'
 
 interface AccountButtonProps {}
 
@@ -52,8 +52,8 @@ const AccountButton: React.FC<AccountButtonProps> = (props) => {
           <ConnectWallet onClick={handleUnlockClick}>Connect Wallet</ConnectWallet>
         </StyleUnlock>) : (
         <BoxWallet>
-            <div>{account.substr(0, 7)}...</div>
-            {/* <Button onClick={onPresentAccountModal} size="sm" variant="secondary" text="My Wallet" /> */}
+          <div onClick={onPresentAccountModal}>{account.slice(0, 6)}...{account.slice(-4)}</div>
+          <img src={CremeToken} alt="creme token" />
         </BoxWallet>
       )}
     </StyledAccountButton>
@@ -93,32 +93,47 @@ const StyledAccountButton = styled.div`
   white-space: nowrap;
   width: 100%;
   margin-right: 20px;
+  @media (max-width: 767px) {
+    margin-right: 10px;
+  }
 `
 
 const BoxWallet = styled.div`
-    display: flex;
-    position: relative;
-    z-index: 1;
+  background-color: #232323;
+  border: 1px solid #50E3C2;
+  color: #FAE8BA;
+  border-radius: 40px;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
     div {
-        background: #4c5050;
-        padding: 0 16px;
-        display: flex;
-        align-items: center;
-        border-radius: 8px;
-        color: #fff;
-        font-size: 13px;
-        font-weight: bold;
-        position: relative;
-        &:before{
-            position: absolute;
-            content: '';
-            background: #4c5050;
-            height: 100%;
-            width: 50%;
-            z-index: -1;
-            right: -25%;
-        }
+      flex: 1 1 auto;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin: 0 0.5rem 0 0.25rem;
+      font-size: 1rem;
+      width: -webkit-fit-content;
+      width: -moz-fit-content;
+      width: fit-content;
+      font-family: SF-500;
+      margin-right: 25px;
     }
+    img {
+      position: absolute;
+      right: 0;
+    }
+  @media (max-width: 767px) {
+    div {
+      margin-right: 0;
+    }
+    img {
+      display: none;
+    }
+  }
 `
 
 export default AccountButton

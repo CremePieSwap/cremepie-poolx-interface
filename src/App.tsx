@@ -15,22 +15,19 @@ import Farms from './views/Farms'
 import Home from './views/Home'
 import Referral from './views/Referral'
 import config from './config'
+import Menu from './components/Menu'
 
 const App: React.FC = () => {
-  const [mobileMenu, setMobileMenu] = useState(false)
+  const [showMenu, setShowMenu] = useState(true)
 
-  const handleDismissMobileMenu = useCallback(() => {
-    setMobileMenu(false)
-  }, [setMobileMenu])
-
-  const handlePresentMobileMenu = useCallback(() => {
-    setMobileMenu(true)
-  }, [setMobileMenu])
+  // const handleMenu = useCallback(() => {
+  //   setShowMenu(!showMenu)
+  // }, [setShowMenu])
   localStorage.setItem('CACHE_BSC_TRY_CONNECT', '0')
   return (
     <Providers>
-      <TopBar onPresentMobileMenu={handlePresentMobileMenu} />
-      <MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
+      <TopBar onClickMenu={() => setShowMenu(!showMenu)} showMenu={showMenu}/>
+      <Menu visible={showMenu}/>
       <Switch>
         <Route path="/" exact>
           <Home />

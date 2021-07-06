@@ -9,11 +9,11 @@ import AccountButton from './components/AccountButton'
 import Nav from './components/Nav'
 
 interface TopBarProps {
-  onPresentMobileMenu: () => void
+  showMenu: boolean,
+  onClickMenu: () => void
 }
 
-const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu }) => {
-  const [showMenu, setShowMenu] = useState(false)
+const TopBar: React.FC<TopBarProps> = ({ showMenu, onClickMenu }) => {
   return (
     <StyledTopBar>
       <StyledTopBarInner>
@@ -21,7 +21,7 @@ const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu }) => {
           <StyledLogoWrapper>
             <WrapIconMenu>
               <img
-                onClick={() => setShowMenu(!showMenu)}
+                onClick={() => onClickMenu()}
                 src={showMenu ? MenuOpen : MenuClose}
                 width="25"
                 style={{ cursor: 'pointer' }}
@@ -34,9 +34,6 @@ const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu }) => {
           <AccountButton />
         </StyledAccountButtonWrapper>
       </StyledTopBarInner>
-      <WrapMenuMobile>
-        <Nav showMenu={showMenu} />
-      </WrapMenuMobile>
     </StyledTopBar>
   )
 }
@@ -64,7 +61,14 @@ const WrapIconMenu = styled.div`
 `
 
 const StyledTopBar = styled.div`
-  background-color: ${(props) => props.theme.color.primary.light};
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  z-index: 2;
 `
 
 const StyledTopBarInner = styled.div`
@@ -77,6 +81,10 @@ const StyledTopBarInner = styled.div`
   border-bottom: 2px solid rgba(133, 133, 133, 0.1);
   z-index: 20;
   transform: translate3d(0px, 0px, 0px);
+  width: 100%;
+  @media (max-width: 767px) {
+    padding: 0;
+  }
 `
 
 const StyledAccountButtonWrapper = styled.div`
