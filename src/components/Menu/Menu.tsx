@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom'
 import Home from '../../assets/img/home_icon.svg'
 import Trade from '../../assets/img/trade_icon.svg'
 import Pools from '../../assets/img/pools_icon.svg'
+import Farm from '../../assets/img/farm_icon.svg'
 import Active from '../../assets/img/active_menu.svg'
 interface MenuProps {
   onDismiss?: () => void
@@ -15,12 +16,12 @@ interface MenuProps {
 const Menu: React.FC<MenuProps> = ({ onDismiss, visible }) => {
   return (
     <StyledMenuWrapper className={isMobile ? visible ? 'show mobile': 'hide': visible ? 'show' : 'minimize'}>
-      <StyledMenu>
-        <StyledNavLink exact activeClassName="active" to="/" onClick={onDismiss}>
+      <div>
+        <StyledAbsoluteLink href="https://swap.bscex.org/#/swap">
           <img className='active' src={Active} alt="active" />
           <img src={Home} alt="home" />
           Home
-        </StyledNavLink>
+        </StyledAbsoluteLink>
         <StyledAbsoluteLink href="https://swap.bscex.org/#/swap">
           <img className='active' src={Active} alt="active" />
           <img src={Trade} alt="trade" />
@@ -31,19 +32,15 @@ const Menu: React.FC<MenuProps> = ({ onDismiss, visible }) => {
           <img src={Pools} alt="pools" />
           Pools
         </StyledAbsoluteLink>
-      </StyledMenu>
+        <StyledNavLink exact activeClassName="active" to="/" onClick={onDismiss}>
+          <img className='active' src={Active} alt="active" />
+          <img src={Farm} alt="pools" />
+          Farm
+        </StyledNavLink>
+      </div>
     </StyledMenuWrapper>
   )
 }
-
-const StyledBackdrop = styled.div`
-  background-color: ${(props) => props.theme.color.grey[600]}aa;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-`
 
 const StyledMenuWrapper = styled.div`
   position: fixed;
@@ -72,18 +69,6 @@ const StyledMenuWrapper = styled.div`
   }
 `
 
-const slideIn = keyframes`
-  0% {
-    transform: translateX(0)
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-`
-
-const StyledMenu = styled.div`
-`
-
 const StyledNavLink = styled(NavLink).attrs({
   activeClassName: 'active'
 })`
@@ -108,6 +93,7 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 
   &.active {
+    color: #50E3C2;
     > img {
       &.active {
         display: block;
