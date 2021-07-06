@@ -1,7 +1,20 @@
+@font-face {
+  font-family: 'SF-400';
+  src: url('./assets/fonts/SF-Pro-Rounded-Thin.otf') format('truetype')
+}
+@font-face {
+  font-family: 'SF-500';
+  src: url('./assets/fonts/SF-Pro-Rounded-Medium.otf') format('truetype')
+}
+@font-face {
+  font-family: 'SF-900';
+  src: url('./assets/fonts/SF-Pro-Rounded-Bold.otf') format('truetype')
+}
+
 body {
-  background: #121827;
+  background: #232323;
   margin: 0;
-  font-family: 'Nunito Sans', sans-serif;
+  font-family: 'SF-500', sans-serif;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

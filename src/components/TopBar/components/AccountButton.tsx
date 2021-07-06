@@ -61,41 +61,18 @@ const AccountButton: React.FC<AccountButtonProps> = (props) => {
 }
 
 const StyleUnlock = styled.div`
-  display: flex;
-  flex-direction: row;
-  -webkit-box-align: center;
-  align-items: center;
-  background-color: rgb(50, 50, 50);
-  border-radius: 40px;
-  white-space: nowrap;
-  width: 100%;
-  cursor: pointer;
-`
-
-const ConnectWallet = styled.div`
-  min-width: 130px;
-  margin: 0px auto;
-  text-align: center;
-  outline: none;
-  text-decoration: none;
-  -webkit-box-pack: center;
-  justify-content: center;
-  position: relative;
-  z-index: 1;
-  font-size: 1rem;
-  display: flex;
-  flex-flow: row nowrap;
-  width: 100%;
-  -webkit-box-align: center;
-  align-items: center;
+  background-color: #50E3C2;
+  color: #5B5A99;
   padding: 0.5rem;
-  border-radius: 12px;
   cursor: pointer;
-  user-select: none;
-  background-color: rgb(80, 227, 194);
-  border: none;
-  color: rgb(91, 90, 153);
+  border-radius: 12px;
+`
+  
+const ConnectWallet = styled.div`
+  font-size: 1rem;
+  line-height: 1.2rem;
   font-weight: 500;
+  margin: 0 0.5rem 0 0.25rem;
 `
 
 const StyleError = styled.span`
@@ -108,7 +85,15 @@ const StyleError = styled.span`
   margin-right: 10px;
 `
 
-const StyledAccountButton = styled.div``
+const StyledAccountButton = styled.div`
+  display: flex;
+  flex-direction: row;
+  -webkit-box-align: center;
+  align-items: center;
+  white-space: nowrap;
+  width: 100%;
+  margin-right: 20px;
+`
 
 const BoxWallet = styled.div`
     display: flex;
