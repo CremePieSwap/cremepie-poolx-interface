@@ -2,13 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Bscx from '../../assets/img/logo.svg'
-import BscxLogo from '../../assets/img/logo-icon.svg'
+import CremePieLogo from '../../assets/img/cremepie.svg'
 
 const Logo: React.FC = () => {
   return (
     <StyledLogo to="/">
-      <img className="d-sm-none" src={Bscx} height="45" style={{ marginTop: -4 }} />
-      <img className="d-md-none" src={BscxLogo} height="40" style={{ marginTop: -4 }} />
+      <img className="d-sm-none" src={CremePieLogo} height="45" style={{ marginTop: -4 }} />
+      <img className="d-md-none" src={CremePieLogo} height="40" style={{ marginTop: -4 }} />
     </StyledLogo>
   )
 }
