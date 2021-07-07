@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import Countdown, { CountdownRenderProps } from 'react-countdown'
 import styled, { keyframes } from 'styled-components'
@@ -12,20 +12,29 @@ import CardIcon from '../../../components/CardIcon'
 import Loader from '../../../components/Loader'
 import Spacer from '../../../components/Spacer'
 import Status from '../../../components/Status'
+import Value from '../../../components/Value'
 import { Farm } from '../../../contexts/Farms'
-import useAllStakedValue, {
-  StakedValue,
-} from '../../../hooks/useAllStakedValue'
+import useAllStakedValue, { StakedValue } from '../../../hooks/useAllStakedValue'
 import useFarms from '../../../hooks/useFarms'
 import usePoolActive from '../../../hooks/usePoolActive'
 import useRewardBalance from '../../../hooks/useRewardBalance'
+import useEarnings from '../../../hooks/useEarnings'
 import useSushi from '../../../hooks/useSushi'
+import useAllowance from '../../../hooks/useAllowance'
+import useApprove from '../../../hooks/useApprove'
+import useModal from '../../../hooks/useModal'
+import useStake from '../../../hooks/useStake'
+import useTokenBalance from '../../../hooks/useTokenBalance'
 import { NUMBER_BLOCKS_PER_YEAR, START_NEW_POOL_AT, PROJECTS, CONSTANT_APY, VERSIONS } from '../../../sushi/lib/constants'
 import { getEarned, getNewRewardPerBlock } from '../../../sushi/utils'
 import { bnToDec } from '../../../utils'
 import { getBalanceNumber, getDisplayBalance } from '../../../utils/formatBalance'
 import ReactTooltip from 'react-tooltip'
 import Autosuggest from 'react-autosuggest'
+import DepositModal from './DepositModal'
+
+import CloseIcon from '../../../assets/img/close_icon.svg'
+import OpenIcon from '../../../assets/img/open_icon.svg'
 
 interface FarmWithStakedValue extends Farm {
   tokenAmount: BigNumber
@@ -47,7 +56,10 @@ const FarmCards: React.FC = () => {
   const xpoRewardBalance = useRewardBalance('XPO', VERSIONS.V1)
   const twinRewardBalance = useRewardBalance('TWIN', VERSIONS.V1)
 
-  const rows = farms.reduce<FarmWithStakedValue[][]>(
+  const farms_lp = Object.values(farms).filter((farm) => farm.addLiquidityLink !== '')
+  console.log('farms_lp', farms_lp);
+
+  const rows = farms_lp.reduce<FarmWithStakedValue[][]>(
     (farmRows, farm, i) => {
       var sv = (stakedValue || []).find(e => {
         return parseInt(e.pid) == farm.pid && e.version == farm.version
@@ -130,7 +142,7 @@ const FarmCards: React.FC = () => {
   }
 
   const inputProps = {
-    placeholder: 'Search your pool ex: ZD-BNB',
+    placeholder: 'Search farm',
     value: farmsValue,
     onChange: onChange
   };
@@ -147,69 +159,30 @@ const FarmCards: React.FC = () => {
           inputProps={inputProps}
         />
       </div>
-      {Object.entries(PROJECTS).map(([key, project]) => {
-        let rewardBalance = zdcashRewardBalance
-
-        if (key === 'XPO') {
-          rewardBalance = xpoRewardBalance
-        }
-        if (key === 'TWIN') {
-          rewardBalance = twinRewardBalance
-        }
-
-        let keys = ['BARMY', 'BSCX', 'MLTP', 'CORGIB']
-        let isMultipleStake = keys.includes(key)
-
-        return (<CardItem>
-          <StyledSpacer />
-          <CardHeader>
-              <CardHeaderLeft>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img src={project.logo} height="35" style={{ marginRight: '10px' }} /> <ProjectName>{project.name}</ProjectName>
-                </div>
-                <StyledSpacer />
-                <Status status={project.status} />
-                <CardItemDescription>
-                  {project.description}
-                </CardItemDescription>
-              </CardHeaderLeft>
-              <CardHeaderRight>
-                {!isMultipleStake && <CardTextShow>
-                  <span>Reward Pool:</span> <span><b>{getDisplayBalance(new BigNumber(rewardBalance))} {key}</b></span>
-                </CardTextShow>}
-                {isMultipleStake && <CardTextShow>
-                  <span>Reward Pool:</span> <span>~</span>
-                </CardTextShow>}
-                {/*<CardCountDown>
-                  Time until farming ends <br /><br /> <Countdown
-                  date={new Date(project.timeEnded)}
-                  renderer={renderer}
-                />
-                </CardCountDown>*/}
-              </CardHeaderRight>
-          </CardHeader>
-          <StyledCards>
-            {!!rows[0].length ? (
-              rows.map((farmRow, i) => (
-                <StyledRow key={i}>
-                  {farmRow.map((farm, j) => (<>
-                    {farm.project === key && <React.Fragment key={j}>
-                      <FarmCard farm={farm} />
-                    </React.Fragment>}</>
-                  ))}
-                </StyledRow>
-              ))
-            ) : (
-              <StyledLoadingWrapper>
-                <Loader text="Cooking the rice ..." />
-              </StyledLoadingWrapper>
-            )}
-          </StyledCards>
-        </CardItem>
-      )})}
+      <CardItem>
+        <StyledSpacer />
+        <StyledCards>
+          {!!rows[0].length ? (
+            rows.map((farmRow, i) => (
+              <StyledRow key={i}>
+                {farmRow.map((farm, j) => (
+                  <>
+                    <FarmCard farm={farm} />
+                  </>
+                ))}
+              </StyledRow>
+            ))
+          ) : (
+            <StyledLoadingWrapper>
+              <Loader text="Cooking the rice ..." />
+            </StyledLoadingWrapper>
+          )}
+        </StyledCards>
+      </CardItem>
     </div>
   )
 }
+
 
 interface FarmCardProps {
   farm: FarmWithStakedValue
@@ -219,6 +192,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
   let poolActive = usePoolActive(farm.pid)
   const sushi = useSushi()
   const [newReward, setNewRewad] = useState<BigNumber>()
+  const [isShowDetail, setIsShowDetail] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -255,76 +229,260 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
   const CardWrap = farm.old ? CardGray : Card
   const oldTile = farm.old ? 'OLD' : ''
 
+  let earnings = useEarnings(farm.pid, farm.version)
+  let earned = getBalanceNumber(earnings, farm.decimalsReward)
+  // console.error('farm', farm);
+  const allowance = useAllowance(farm.lpContract, farm.version)
+  const { onApprove } = useApprove(farm.lpContract, farm.version)
+  const handleApprove = useCallback(async () => {
+    try {
+      const txHash = await onApprove()
+    } catch (e) {
+      console.log(e)
+    }
+  }, [onApprove])
+  const tokenBalance = useTokenBalance(farm.lpContract.options.address)
+  const { onStake } = useStake(farm.pid, farm.version, farm.decimals)
+  const [onPresentDeposit] = useModal(
+    <DepositModal
+      max={tokenBalance}
+      onConfirm={onStake}
+      tokenName={farm.lpToken.toUpperCase()}
+      decimals={farm.decimals}
+    />,
+  )
   return (
-    <StyledCardWrapper>
-      {farm.tokenSymbol === 'BSCX' && <StyledCardAccent />}
-      <CardWrap>
-        <CardContent>
-          <StyledContent>
-            {farm.stake && <div style={{display: 'flex'}}>
-              <CardIcon><img src={farm.icon} alt="" height="60"/></CardIcon>
-              <span>&nbsp;&nbsp;</span>
-              <CardIcon><img src={farm.icon2} alt="" height="60"/></CardIcon>
-            </div>}
-            {!farm.stake && <div style={{display: 'flex'}}>
-              <CardIcon><img src={farm.icon} alt="" height="60"/></CardIcon>
-              <span>&nbsp;&nbsp;</span>
-              <CardIcon><img src={farm.icon2} alt=""  height="60"/></CardIcon>
-            </div>}
-            <StyledTitle>{farm.name} {oldTile}</StyledTitle>
-            <StyledDetails>
-              <StyledDetail>{farm.description}</StyledDetail>
-            </StyledDetails>
-            <Spacer />
-            <Button
-              disabled={!poolActive}
-              text={poolActive ? 'Select' : undefined}
-              to={`/farms/${farm.id}`}
-            >
-              {!poolActive && (
-                <Countdown
-                  date={new Date(startTime * 1000)}
-                  renderer={renderer}
-                />
-              )}
-            </Button>
-            <br/>
-            <StyledInsight>
-              <span>Total Locked Value</span>
-              <span>
-                {farm.usdValue &&
-                  <><b>{parseFloat(farm.usdValue.toFixed(0)).toLocaleString('en-US')} USD</b></>
+    <>
+    <FarmDetail 
+      onClick={() => setIsShowDetail(!isShowDetail)}
+    >
+      <div className='farm-icon' style={{display: 'flex', alignItems: 'center'}}>
+        <img style={{height:'32px', borderRadius: '50%'}} src={farm.icon} alt='token'/>
+        <img style={{height:'19px', borderRadius: '50%'}} src={farm.icon2} alt='token2'/>
+      </div>
+      <div className='farm-name'>
+        {farm.name}
+      </div>
+      <div className='farm-title farm-earned'>
+        <div className='subtitle'>Earned</div>
+        <div><Value value={earned}/></div>
+      </div>
+      <div className='farm-title farm-APR'>
+        <div className='subtitle'>APR</div>
+        <div>{apy ? `${apy.toLocaleString('en-US')}%` : '~'}</div>
+      </div>
+      <div className='farm-title farm-liquidity'>
+        <div className='subtitle'>Liquidity</div>
+        <div>
+          {farm.usdValue &&
+            <><b>${parseFloat(farm.usdValue.toFixed(0)).toLocaleString('en-US')}</b></>
+          }
+        </div>
+      </div>
+      <div className='farm-title farm-mutiplier'>
+        <div className='subtitle'>Mutiplier</div>
+        <div>{newReward ? `${getBalanceNumber(newReward, farm.decimalsReward).toFixed(2)}x` : '~'}</div>
+      </div>
+      <div className='farm-detail'>
+        <div className='text'>Detail</div>
+        <img src={isShowDetail ? CloseIcon : OpenIcon} alt=''/>
+      </div>
+    </FarmDetail>
+    {isShowDetail && 
+      <MoreDetails>
+        <div className='link-area'>
+          <div>
+            <a href='#'>Get {farm.lpToken}</a>
+          </div>
+          <div>
+            <a 
+              href={`https://bscscan.com/address/${farm.lpTokenAddress}`}
+              target="_blank"
+            >View contract</a>
+          </div>
+        </div>
+        <div className='enable-farm'>
+          {
+            !allowance.toNumber() ?
+            <div className='btn' onClick={handleApprove} >Enable Farm</div> :
+            <div className='btn approved' onClick={onPresentDeposit}>Stake LP</div>
+          }
+        </div>
+        <div>More details of {farm.name}</div>
+      </MoreDetails>
+    }
+    </>
+    // <StyledCardWrapper>
+    //   {farm.tokenSymbol === 'BSCX' && <StyledCardAccent />}
+    //   <CardWrap>
+    //     <CardContent>
+    //       <StyledContent>
+    //         {farm.stake && <div style={{display: 'flex'}}>
+    //           <CardIcon><img src={farm.icon} alt="" height="60"/></CardIcon>
+    //           <span>&nbsp;&nbsp;</span>
+    //           <CardIcon><img src={farm.icon2} alt="" height="60"/></CardIcon>
+    //         </div>}
+    //         {!farm.stake && <div style={{display: 'flex'}}>
+    //           <CardIcon><img src={farm.icon} alt="" height="60"/></CardIcon>
+    //           <span>&nbsp;&nbsp;</span>
+    //           <CardIcon><img src={farm.icon2} alt=""  height="60"/></CardIcon>
+    //         </div>}
+    //         <StyledTitle>{farm.name} {oldTile}</StyledTitle>
+    //         <StyledDetails>
+    //           <StyledDetail>{farm.description}</StyledDetail>
+    //         </StyledDetails>
+    //         <Spacer />
+    //         <Button
+    //           disabled={!poolActive}
+    //           text={poolActive ? 'Select' : undefined}
+    //           to={`/farms/${farm.id}`}
+    //         >
+    //           {!poolActive && (
+    //             <Countdown
+    //               date={new Date(startTime * 1000)}
+    //               renderer={renderer}
+    //             />
+    //           )}
+    //         </Button>
+    //         <br/>
+    //         <StyledInsight>
+    //           <span>Total Locked Value</span>
+    //           <span>
+    //             {farm.usdValue &&
+    //               <><b>{parseFloat(farm.usdValue.toFixed(0)).toLocaleString('en-US')} USD</b></>
 
-                }
-              </span>
-            </StyledInsight>
-            {farm.isHot && <>
-              <StyledInsight>
-                <span>Reward</span>
-                <span>
-                  {newReward && farm.rewardToken.symbol == 'ZD' &&
-                    <><b>{getBalanceNumber(newReward, farm.decimalsReward).toFixed(6)} {farm.rewardToken.symbol}</b> / Block</>
-                  }
-                  {newReward && farm.rewardToken.symbol != 'ZD' &&
-                    <><b>{getBalanceNumber(newReward, farm.decimalsReward).toFixed(2)} {farm.rewardToken.symbol}</b> / Block</>
-                  }
-                </span>
-              </StyledInsight>
-              <StyledInsight>
-                <span data-tip={`APY is high. It is real. But please note that 80% of the farmed coins will be locked for 1 year. The locked coins will be released after the 1 year block by block. This solution is to prevent dumping the token and protect the tokenomics.`}>APY</span>
-                <span style={{fontWeight: 'bold', color: '#4caf50'}}>
-                  {apy ? `${apy.toLocaleString('en-US')}%` : '~'}
-                </span>
-              </StyledInsight>
-            </>
-            }
-          </StyledContent>
-        </CardContent>
-      </CardWrap>
-      <ReactTooltip place="right" className="tooltip-apy"/>
-    </StyledCardWrapper>
+    //             }
+    //           </span>
+    //         </StyledInsight>
+    //         {farm.isHot && <>
+    //           <StyledInsight>
+    //             <span>Reward</span>
+    //             <span>
+    //               {newReward && farm.rewardToken.symbol == 'ZD' &&
+    //                 <><b>{getBalanceNumber(newReward, farm.decimalsReward).toFixed(6)} {farm.rewardToken.symbol}</b> / Block</>
+    //               }
+    //               {newReward && farm.rewardToken.symbol != 'ZD' &&
+    //                 <><b>{getBalanceNumber(newReward, farm.decimalsReward).toFixed(2)} {farm.rewardToken.symbol}</b> / Block</>
+    //               }
+    //             </span>
+    //           </StyledInsight>
+    //           <StyledInsight>
+    //             <span data-tip={`APY is high. It is real. But please note that 80% of the farmed coins will be locked for 1 year. The locked coins will be released after the 1 year block by block. This solution is to prevent dumping the token and protect the tokenomics.`}>APY</span>
+    //             <span style={{fontWeight: 'bold', color: '#4caf50'}}>
+    //               {apy ? `${apy.toLocaleString('en-US')}%` : '~'}
+    //             </span>
+    //           </StyledInsight>
+    //         </>
+    //         }
+    //       </StyledContent>
+    //     </CardContent>
+    //   </CardWrap>
+    //   <ReactTooltip place="right" className="tooltip-apy"/>
+    // </StyledCardWrapper>
   )
 }
+
+const MoreDetails = styled.div`
+  padding: 15px 20px;
+  background: #232323;
+  width: 100%;
+  z-index: 1;
+  display: grid;
+  column-gap: 15px;
+  grid-template-columns: 40% 30% 30%;
+  .link-area {
+    display: block;
+    a {
+      font-family: SF-500;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 23px;
+      color: #50E3C2;
+      cursor: pointer;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  .enable-farm {
+    display: flex;
+    align-items: center;
+    .btn {
+      background: #50E2C2;
+      box-shadow: 1px 1px 0px rgba(170, 170, 204, 0.5);
+      border-radius: 10px;
+      color: #5B5A99;
+      font-family: SF-900;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 30px;
+      width: 180px;
+      text-align: center;
+      padding: 0 40px;
+      cursor: pointer;
+      &.approved {
+        border: 1px solid #50E2C2;
+        background: inherit;
+      }
+    }
+  }
+`
+
+const FarmDetail = styled.div`
+  padding: 15px 20px;
+  width: 100%;
+  background: #323232;
+  z-index: 1;
+  display: grid;
+  column-gap: 15px;
+  grid-template-columns: 60px 200px 100px 100px 150px 100px 100px;
+  border-bottom: 1px solid #3D3D57;
+  cursor: pointer;
+  &:first-child {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+  &:last-child {
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom: 0;
+  }
+  .farm-name {
+    display: flex;
+    align-items: center;
+    color: #BCB7F5;
+    font-size: 16px;
+    line-height: 19px;
+    font-family: SF-900;
+    font-weight: 600;
+  }
+  .farm-title {
+    .subtitle {
+      color: #BCB7F5;
+      font-size: 10px;
+      line-height: 12px;
+      font-family: SF-400;
+      font-weight: 400;
+    }
+  }
+  .farm-detail {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    .text {
+      font-family: SF-500;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 14px;
+      padding-right: 30px;
+      color: #89DBC4;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+`
 
 const RainbowLight = keyframes`
 
@@ -445,11 +603,8 @@ const CardItemDescription = styled.div`
 `
 
 const CardItem = styled.div`
-  width: 1100px;
-  border: 1px solid #252E44;
-  border-radius: 30px;
+  width: 940px;
   margin: 30px 0px;
-  padding: 0px 30px;
 
   @media (max-width: 768px) {
     width: 100%;
