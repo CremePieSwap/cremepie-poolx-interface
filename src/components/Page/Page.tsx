@@ -12,6 +12,7 @@ const Page: React.FC = ({ children }) => (
 const StyledPage = styled.div`
     padding-left: 15px;
     padding-right: 15px;
+    min-width: 940px;
     *, *:before, *:after {
         -moz-box-sizing: border-box; 
         -webkit-box-sizing: border-box; 
@@ -23,7 +24,7 @@ const StyledMain = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - ${(props) => props.theme.topBarSize * 2}px);
+  min-height: calc(100vh - ${(props) => props.theme.topBarSize}px);
 `
 
 export default Page
