@@ -48,7 +48,7 @@ const StyledMenuWrapper = styled.div`
   top: 0;
   left: 0;
   z-index: 1;
-  background-color: #323232;
+  background-color: #FFF;
   height: 100%;
   transition: padding-top 0.2s ease 0s, width 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0s;
   border-right: 0px;
@@ -78,7 +78,7 @@ const StyledNavLink = styled(NavLink).attrs({
   overflow: hidden;
   text-decoration: none;
   font-weight: 600;
-  color: #FAE8BA;
+  color: #89DBC4;
   :hover {
     color: #50E3C2;
     background: #89DBC420;
@@ -110,7 +110,7 @@ const StyledAbsoluteLink = styled.a`
   overflow: hidden;
   text-decoration: none;
   font-weight: 600;
-  color: #FAE8BA;
+  color: #89DBC4;
   :hover {
     color: #50E3C2;
     background: #89DBC420;

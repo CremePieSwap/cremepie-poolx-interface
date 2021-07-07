@@ -99,9 +99,9 @@ const StyledAccountButton = styled.div`
 `
 
 const BoxWallet = styled.div`
-  background-color: #232323;
+  background-color: #E5E5E5;
   border: 1px solid #50E3C2;
-  color: #FAE8BA;
+  color: #89DBC4;
   border-radius: 40px;
   padding: 0.5rem;
   cursor: pointer;
@@ -124,7 +124,7 @@ const BoxWallet = styled.div`
     }
     img {
       position: absolute;
-      right: 0;
+      right: 7px;
     }
   @media (max-width: 767px) {
     div {

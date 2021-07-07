@@ -77,7 +77,7 @@ const StyledTopBarInner = styled.div`
   height: ${(props) => props.theme.topBarSize}px;
   justify-content: space-between;
   padding-right: 16px;
-  background: rgb(50, 50, 50);
+  background: #fff;
   border-bottom: 2px solid rgba(133, 133, 133, 0.1);
   z-index: 20;
   transform: translate3d(0px, 0px, 0px);

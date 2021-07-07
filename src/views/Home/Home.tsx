@@ -90,6 +90,7 @@ const PageTitle = styled.div`
 `
 const Box = styled.div`
   width: 100%;
+  z-index: 2;
   &.mt-4 {
       margin-top: 40px;
       @media (max-width: 767px) {
