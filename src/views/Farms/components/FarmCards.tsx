@@ -57,10 +57,15 @@ const FarmCards: React.FC = () => {
   const xpoRewardBalance = useRewardBalance('XPO', VERSIONS.V1)
   const twinRewardBalance = useRewardBalance('TWIN', VERSIONS.V1)
 
-  const farms_lp = Object.values(farms).filter((farm) => farm.addLiquidityLink !== '')
-  console.log('farms_lp', farms_lp);
+  const [searchText, setSearchText] = useState('')
+  const [farmDisplay, setFarmDisplay] = useState([])
+  
+  useEffect(() => {
+    const farms_lp = Object.values(farms).filter((farm) => farm.addLiquidityLink !== '')
+    setFarmDisplay(farms_lp)
+  }, [farms])
 
-  const rows = farms_lp.reduce<FarmWithStakedValue[][]>(
+  const rows = farmDisplay.reduce<FarmWithStakedValue[][]>(
     (farmRows, farm, i) => {
       var sv = (stakedValue || []).find(e => {
         return parseInt(e.pid) == farm.pid && e.version == farm.version
@@ -148,20 +153,29 @@ const FarmCards: React.FC = () => {
     onChange: onChange
   };
 
+  const handleSearchFarm = (e:any) => {
+    const farms_lp = Object.values(farms).filter((farm) => farm.addLiquidityLink !== '')
+    if (e.target.value === '') {
+      return setFarmDisplay(farms_lp)
+    }
+    setSearchText(e.target.value)
+    let searchResult = farms_lp.filter((farm) => farm.name.toLowerCase().includes(e.target.value.toLowerCase()))
+    setFarmDisplay(searchResult)
+  }
+
   return (
-    <div>
-      <div className="react-autosuggest-wrap">
-        <Autosuggest
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={onSuggestionsClearRequested}
-          getSuggestionValue={getSuggestionValue}
-          renderSuggestion={renderSuggestion}
-          inputProps={inputProps}
-        />
+    <FarmPageWrapper>
+      <div className="actions-area">
+        <div className='search-area'>
+          <div className="label">Search</div>
+          <input 
+            type='text'
+            placeholder='Search farm'
+            onChange={handleSearchFarm}
+          />
+        </div>
       </div>
       <CardItem>
-        <StyledSpacer />
         <StyledCards>
           {!!rows[0].length ? (
             rows.map((farmRow, i) => (
@@ -175,15 +189,41 @@ const FarmCards: React.FC = () => {
             ))
           ) : (
             <StyledLoadingWrapper>
-              <Loader text="Cooking the rice ..." />
+              <Loader text="Loading ..." />
             </StyledLoadingWrapper>
           )}
         </StyledCards>
       </CardItem>
-    </div>
+    </FarmPageWrapper>
   )
 }
 
+const FarmPageWrapper = styled.div`
+  .actions-area {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    .search-area {
+      .label {
+        margin-left: 20px;
+        color: #5B5A99;
+        font-family: SF-400;
+        font-size: 14px;
+        font-weight: 400;
+      }
+      input {
+        background: #5B5A99;
+        box-shadow: inset 1px 1px 1px rgba(35, 35, 35, 0.3);
+        border-radius: 12px;
+        color: #5B5A99;
+        font-family: SF-500;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 5px 20px;
+      }
+    }
+  }
+`
 
 interface FarmCardProps {
   farm: FarmWithStakedValue
@@ -400,7 +440,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
 
 const MoreDetails = styled.div`
   padding: 15px 20px;
-  background: #232323;
+  background: rgba(245, 245, 250, 0.75);;
   width: 100%;
   z-index: 1;
   display: grid;
@@ -490,7 +530,7 @@ const MoreDetails = styled.div`
 const FarmDetail = styled.div`
   padding: 15px 20px;
   width: 100%;
-  background: #323232;
+  background: #FFF;
   z-index: 1;
   display: grid;
   column-gap: 15px;
@@ -509,7 +549,7 @@ const FarmDetail = styled.div`
   .farm-name {
     display: flex;
     align-items: center;
-    color: #BCB7F5;
+    color: #5B5A99;
     font-size: 16px;
     line-height: 19px;
     font-family: SF-900;
@@ -517,7 +557,7 @@ const FarmDetail = styled.div`
   }
   .farm-title {
     .subtitle {
-      color: #BCB7F5;
+      color: #5B5A99;
       font-size: 10px;
       line-height: 12px;
       font-family: SF-400;
@@ -662,7 +702,7 @@ const CardItemDescription = styled.div`
 
 const CardItem = styled.div`
   width: 940px;
-  margin: 30px 0px;
+  margin: 20px 0px;
 
   @media (max-width: 768px) {
     width: 100%;
