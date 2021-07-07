@@ -24,6 +24,7 @@ import useAllowance from '../../../hooks/useAllowance'
 import useApprove from '../../../hooks/useApprove'
 import useModal from '../../../hooks/useModal'
 import useStake from '../../../hooks/useStake'
+import useReward from '../../../hooks/useReward'
 import useTokenBalance from '../../../hooks/useTokenBalance'
 import { NUMBER_BLOCKS_PER_YEAR, START_NEW_POOL_AT, PROJECTS, CONSTANT_APY, VERSIONS } from '../../../sushi/lib/constants'
 import { getEarned, getNewRewardPerBlock } from '../../../sushi/utils'
@@ -251,6 +252,15 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
       decimals={farm.decimals}
     />,
   )
+
+  const { onReward } = useReward(farm.pid, farm.version)
+  const handleHarvest = useCallback(async () => {
+    try {
+      const txHash = await onReward()
+    } catch (error) {
+      console.log(error)
+    }
+  }, [onReward])
   return (
     <>
     <FarmDetail 
@@ -291,10 +301,10 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
     {isShowDetail && 
       <MoreDetails>
         <div className='link-area'>
-          <div>
+          <div className='item'>
             <a href='#'>Get {farm.lpToken}</a>
           </div>
-          <div>
+          <div className='item'>
             <a 
               href={`https://bscscan.com/address/${farm.lpTokenAddress}`}
               target="_blank"
@@ -308,7 +318,13 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
             <div className='btn approved' onClick={onPresentDeposit}>Stake LP</div>
           }
         </div>
-        <div>More details of {farm.name}</div>
+        <div className='harvest'>
+          <div className='content'>
+            <div className='label'><span>{farm.rewardToken.symbol}</span> Earned</div>
+            <div className='value'><Value value={earned}/></div>
+          </div>
+          <div className='btn' onClick={handleHarvest}>Harvest</div>
+        </div>
       </MoreDetails>
     }
     </>
@@ -388,20 +404,23 @@ const MoreDetails = styled.div`
   width: 100%;
   z-index: 1;
   display: grid;
-  column-gap: 15px;
   grid-template-columns: 40% 30% 30%;
   .link-area {
-    display: block;
-    a {
-      font-family: SF-500;
-      font-size: 12px;
-      font-weight: 500;
-      line-height: 23px;
-      color: #50E3C2;
-      cursor: pointer;
-      text-decoration: none;
-      &:hover {
-        text-decoration: underline;
+    display: grid;
+    .item {
+      display: flex;
+      align-items: center;
+      a {
+        font-family: SF-500;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 23px;
+        color: #50E3C2;
+        cursor: pointer;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }
@@ -425,6 +444,45 @@ const MoreDetails = styled.div`
         border: 1px solid #50E2C2;
         background: inherit;
       }
+    }
+  }
+  .harvest {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border: 1px solid #59588D;
+    border-radius: 15px;
+    .content {
+      .label {
+        color: #5B5A99;
+        font-family: SF-900;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 20px;
+        span {
+          color: #50E3C2;
+        }
+      }
+      .value {
+        color: #5B5A99;
+        font-family: SF-900;
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
+    .btn {
+      background: #50E2C2;
+      box-shadow: 1px 1px 0px rgba(170, 170, 204, 0.5);
+      border-radius: 10px;
+      color: #5B5A99;
+      font-family: SF-900;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 30px;
+      text-align: center;
+      padding: 0 20px;
+      cursor: pointer;
     }
   }
 `
