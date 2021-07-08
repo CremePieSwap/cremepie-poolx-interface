@@ -24,7 +24,7 @@ const StyledModalActions = styled.div`
   background-color: ${props => props.theme.color.grey[100]}00;
   display: flex;
   margin: 0;
-  padding: 1px 24px;
+  padding: 20px 20px 0;
 `
 
 const StyledModalAction = styled.div`

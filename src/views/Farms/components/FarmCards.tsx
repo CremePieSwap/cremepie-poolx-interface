@@ -444,6 +444,18 @@ const MoreDetails = styled.div`
         border: 1px solid #50E2C2;
         background: inherit;
       }
+    }    
+    .unstake {
+      text-align: center;
+      color: #5B5A99;
+      font-family: SF-900;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 30px;
+      cursor: pointer;
+      :hover {
+        text-decoration: underline;
+      }
     }
   }
   .harvest {

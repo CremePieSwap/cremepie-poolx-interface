@@ -106,7 +106,7 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
                                         Address
                                     </TextMin>
                                     <TextMedium>
-                                        <a style={{ color: '#ffffff', textDecoration: 'none' }}
+                                        <a style={{ color: '#5B5A99', textDecoration: 'none' }}
                                         target="__blank"
                                         href={`https://bscscan.com/address/${account}`}>{account}</a>
                                     </TextMedium>
@@ -320,12 +320,11 @@ const ReleaseButton = styled.button`
     border: 1px solid #5d533f;
     font-weight: bold;
     cursor: no-drop;
-    margin-left: 10px;
+    margin-right: 10px;
     border-radius: 2px;
     padding: 2px 10px;
     transition: 0.3s all;
     height: 20px;
-    margin-top: 5px;
     &:hover {
         background: #fabc450d
     }
@@ -333,6 +332,8 @@ const ReleaseButton = styled.button`
 
 const Row = styled.div`
     display: flex;
+    align-items: center;
+    margin-bottom: 5px;
     margin-left: -15px;
     margin-right: -15px;
     &.align-center {
@@ -403,16 +404,16 @@ const Col = styled.div`
 `
 
 const Heading3 = styled.div`
-    background: #242828;
+    background: #50E2C2;
     font-size: 16px;
     font-weight: 800;
-    color: #5aa62b;
+    color: #5B5A99;
     padding: 12px 20px;
     border-radius: 16px 16px 0 0;
 `
 
 const Box = styled.div`
-    background: #2C3030;
+    background: #F5F5FA;
     border-radius: 16px;
     *, *:before, *:after {
         -moz-box-sizing: border-box;
@@ -481,7 +482,7 @@ const TextMin2 = styled.div`
 const TextMedium = styled.div`
     font-weight: 500;
     font-size: 12px;
-    color: #FFFFFF;
+    color: #5B5A99;
     word-break: break-word;
     strong {
         font-size: 12px;
