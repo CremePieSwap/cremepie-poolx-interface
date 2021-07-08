@@ -27,19 +27,18 @@ const Input: React.FC<InputProps> = ({
 
 const StyledInputWrapper = styled.div`
   align-items: center;
-  background-color: ${props => props.theme.color.grey[500]};
+  background-color: #F5F5FA;
   border-radius: ${props => props.theme.borderRadius}px;
   display: flex;
   height: 48px;
-  padding: 0 ${props => props.theme.spacing[3]}px;
 `
 
 const StyledInput = styled.input`
   background: none;
   border: 0;
-  color: ${props => props.theme.color.white};
-  font-size: 32px;
-  font-weight: bold;
+  color: #5B5A99;
+  font-size: 18px;
+  font-weight: 600;
   flex: 1;
   height: 48px;
   margin: 0;
@@ -47,16 +46,16 @@ const StyledInput = styled.input`
   outline: none;
   max-width: 225px;
   &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: ${props => props.theme.color.white};
+    color: #5B5A99;
     opacity: 1; /* Firefox */
   }
   
   &:-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color: ${props => props.theme.color.white};
+    color: #5B5A99;
   }
   
   &::-ms-input-placeholder { /* Microsoft Edge */
-    color: ${props => props.theme.color.white};
+    color: #5B5A99;
   }
 `
 

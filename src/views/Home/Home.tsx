@@ -1,27 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import cookie from 'js-cookie'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import React from 'react'
 import styled from 'styled-components'
-import { useWallet } from 'use-wallet'
-import Button from '../../components/Button'
-import Container from '../../components/Container'
 import Page from '../../components/Page'
-// import PageHeader from '../../components/PageHeader'
-import Spacer from '../../components/Spacer'
-import Balances from './components/Balances'
-import CustomCountDown from './components/CustomCountDown'
-import { START_REWARD_AT_BLOCK, LP_BALANCE_LV1, LP_BALANCE_LV2 } from '../../sushi/lib/constants'
-import Logo from '../../assets/img/cremepie.svg'
-import CopyIcon from '../../assets/img/copy.png'
 import FarmCards from '../Farms/components/FarmCards'
-import TotalLockValue from './components/TotalLockValue'
-import useStakeBSCX from '../../hooks/useStakeBSCX'
-import { getBalanceNumber } from '../../utils/formatBalance'
-import { ToastContainer, toast } from 'react-toastify'
-import usePrice from '../../hooks/usePrice'
-import { isAddress } from '../../utils'
 import 'react-toastify/dist/ReactToastify.css'
+import { isMobile } from 'react-device-detect'
 
 import BG_1 from '../../assets/img/farm_bg_1.svg'
 import BG_2 from '../../assets/img/farm_bg_2.svg'
@@ -42,35 +24,52 @@ const Home: React.FC = () => {
       <Box className="mt-4">
         <FarmCards />
       </Box>
-      <img
-        className='bg-1'
-        src={BG_1}
-        alt='1'
-        style={{
-          position: 'fixed',
-          opacity: 0.1,
-          top: '74px',
-          right: '30px',
-          zIndex: 0
-        }}
-      />
-      <img
-        className='bg-2'
-        src={BG_2}
-        alt='2'
-        style={{
-          position: 'fixed',
-          opacity: 0.1,
-          bottom: 0,
-          right: 0,
-          zIndex: 0
-        }}
-      />
+      { isMobile ? 
+        <img
+          className='bg-1'
+          src={BG_1}
+          alt='1'
+          style={{
+            position: 'fixed',
+            opacity: 0.1,
+            top: '74px',
+            right: '-65px',
+            zIndex: 0
+          }}
+        /> : 
+        <>
+          <img
+            className='bg-1'
+            src={BG_1}
+            alt='1'
+            style={{
+              position: 'fixed',
+              opacity: 0.1,
+              top: '74px',
+              right: '30px',
+              zIndex: 0
+            }}
+          />
+          <img
+            className='bg-2'
+            src={BG_2}
+            alt='2'
+            style={{
+              position: 'fixed',
+              opacity: 0.1,
+              bottom: 0,
+              right: 0,
+              zIndex: 0
+            }}
+          />
+        </>
+      }
     </Page>
   )
 }
 
 const PageTitle = styled.div`
+  padding-top: 64px;
   width: 100%;
   text-align: left;
   color: #89DBC4;

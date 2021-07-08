@@ -49,21 +49,17 @@ interface FarmWithStakedValue extends Farm {
   avaiableReward: BigNumber
 }
 
-const FarmCards: React.FC = () => {
+const PoolsCard: React.FC = () => {
   const [farms] = useFarms()
   const [farmsValue, setFarmsValue] = useState('')
-  const [suggestions, setSuggestions] = useState([])
   const stakedValue = useAllStakedValue()
-  const zdcashRewardBalance = useRewardBalance('ZDCASH', VERSIONS.V1)
-  const xpoRewardBalance = useRewardBalance('XPO', VERSIONS.V1)
-  const twinRewardBalance = useRewardBalance('TWIN', VERSIONS.V1)
 
   const [searchText, setSearchText] = useState('')
   const [farmDisplay, setFarmDisplay] = useState([])
   
   useEffect(() => {
-    const farms_lp = Object.values(farms).filter((farm) => farm.addLiquidityLink !== '')
-    setFarmDisplay(farms_lp)
+    const stake_token = Object.values(farms).filter((farm) => farm.addLiquidityLink === '')
+    setFarmDisplay(stake_token)
   }, [farms])
 
   const rows = farmDisplay.reduce<FarmWithStakedValue[][]>(
@@ -94,19 +90,6 @@ const FarmCards: React.FC = () => {
     [[]],
   )
 
-  const renderer = (countdownProps: CountdownRenderProps) => {
-    var { days, hours, minutes, seconds } = countdownProps
-    const paddedSeconds = seconds < 10 ? `0${seconds}` : seconds
-    const paddedMinutes = minutes < 10 ? `0${minutes}` : minutes
-    // hours = days * 24 + hours
-    const paddedHours = hours < 10 ? `0${hours}` : hours
-    return (
-      <span style={{ width: '100%', marginTop: '10px' }}>
-        <NumberClock>{days}</NumberClock> D : <NumberClock>{hours}</NumberClock> H : <NumberClock>{minutes}</NumberClock> M
-      </span>
-    )
-  }
-
   // Teach Autosuggest how to calculate suggestions for any given input value.
   const getSuggestions = (value: string) => {
     const inputValue = value.trim().toLowerCase();
@@ -116,33 +99,6 @@ const FarmCards: React.FC = () => {
       farm.name.toLowerCase().slice(0, inputLength) === inputValue
     );
   };
-
-  // When suggestion is clicked, Autosuggest needs to populate the input
-  // based on the clicked suggestion. Teach Autosuggest how to calculate the
-  // input value for every given suggestion.
-  const getSuggestionValue = (suggestion: any) => suggestion.name;
-
-  // Use your imagination to render suggestions.
-  const renderSuggestion = (suggestion: any) => (
-    <div className="suggestions-container">
-      <span className="suggestions-image">
-        <img width="22" src={suggestion.icon} /> <img width="22" src={suggestion.icon2} />
-      </span>
-      <StyledLink to={`/farms/${suggestion.symbol}`}>
-        <span className="suggestions-name"> {suggestion.name} (reward {suggestion.rewardToken.symbol})</span>
-      </StyledLink>
-    </div>
-  );
-
-  const onSuggestionsFetchRequested = (data: any) => {
-    setFarmsValue(data.value)
-    const sugs = getSuggestions(data.value)
-    setSuggestions(sugs)
-  }
-
-  const onSuggestionsClearRequested = () => {
-    setFarmsValue('')
-  }
 
   const onChange = (event: any, data: any) => {
     setFarmsValue(data.value)
@@ -155,12 +111,12 @@ const FarmCards: React.FC = () => {
   };
 
   const handleSearchFarm = (e:any) => {
-    const farms_lp = Object.values(farms).filter((farm) => farm.addLiquidityLink !== '')
+    const stake_token = Object.values(farms).filter((farm) => farm.addLiquidityLink === '')
     if (e.target.value === '') {
-      return setFarmDisplay(farms_lp)
+      return setFarmDisplay(stake_token)
     }
     setSearchText(e.target.value)
-    let searchResult = farms_lp.filter((farm) => farm.name.toLowerCase().includes(e.target.value.toLowerCase()))
+    let searchResult = stake_token.filter((farm) => farm.name.toLowerCase().includes(e.target.value.toLowerCase()))
     setFarmDisplay(searchResult)
   }
 
@@ -352,7 +308,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
       <MoreDetails>
         <div className='link-area'>
           <div className='item'>
-            <a href='#'>Get {farm.lpToken}</a>
+            <a href='#'>Get token info</a>
           </div>
           <div className='item'>
             <a 
@@ -599,67 +555,6 @@ const NumberClock = styled.span`
   padding: 5px 10px;
 `
 
-const CardHeader = styled.div`
-  margin-bottom: 6px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0px 30px;
-
-  @media (max-width: 768px) {
-    display: block;
-    padding: 0px;
-  }
-`
-
-const CardHeaderLeft = styled.div`
-
-`
-
-const CardTextShow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 16px;
-  color: #CECDBA;
-  font-weight: 500;
-  padding: 5px 0px;
-`
-
-const CardHeaderRight = styled.div`
-  min-width: 300px;
-  @media (max-width: 768px) {
-    margin-bottom: 30px;
-  }
-`
-
-const CardCountDown = styled.div`
-  text-align: center;
-  color: #CECDBA;
-  font-size: 14px;
-  margin-top: 10px;
-`
-
-const CardStatus = styled.div`
-  border: 1px solid #2FF37D;
-  box-sizing: border-box;
-  border-radius: 10px;
-  color: #2FF37D;
-  width: 100px;
-  text-align: center;
-  text-transform: capitalize;
-`
-
-const CardItemDescription = styled.div`
-  max-width: 660px;
-  color: #5aa62b;
-  font-size: 14px;
-  margin: 15px 0px;
-  font-weight: 500;
-`
-
 const CardItem = styled.div`
   width: 940px;
   margin: 20px 0px;
@@ -667,13 +562,6 @@ const CardItem = styled.div`
   @media (max-width: 768px) {
     width: 100%;
   }
-`
-
-const ProjectName = styled.span`
-  font-style: normal;
-  font-weight: bold;
-  font-size: 24px;
-  color: #CECDBA;
 `
 
 const StyledLoadingWrapper = styled.div`
@@ -695,92 +583,4 @@ const StyledRow = styled.div`
   }
 `
 
-const StyledCardWrapper = styled.div`
-  display: flex;
-  width: calc((900px - ${(props) => props.theme.spacing[4]}px * 2) / 3);
-  position: relative;
-  overflow: hidden;
-  border-radius: 12px;
-  margin: 20px 30px;
-
-  @media (max-width: 768px) {
-    margin: 10px 6px;
-  }
-`
-
-const StyledTitle = styled.h4`
-  color: ${(props) => props.theme.color.white};
-  font-size: 20px;
-  font-weight: 700;
-  margin: ${(props) => props.theme.spacing[2]}px 0 0;
-  padding: 0;
-`
-
-const StyledContent = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-`
-const StyledTopIcon = styled.div`
-  // position: relative;
-`
-
-const StyledHotIcon = styled.div`
-  position: absolute;
-  background-color: gray;
-  padding: 8px 40px 8px;
-  top: 12px;
-  left: -40px;
-  font-weight: bold;
-  -webkit-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-  color: #fff;
-  font-size: 9px;
-`
-
-const StyledNewIcon = styled.div`
-  position: absolute;
-  padding: 8px 40px 8px;
-  top: 12px;
-  left: -40px;
-  background-color: ${(props) => props.theme.color.primary.main};
-  font-weight: bold;
-  -webkit-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-  color: #fff;
-  font-size: 9px;
-`
-
-const StyledSpacer = styled.div`
-  height: ${(props) => props.theme.spacing[4]}px;
-  width: ${(props) => props.theme.spacing[4]}px;
-`
-
-const StyledDetails = styled.div`
-  margin-top: ${(props) => props.theme.spacing[2]}px;
-  text-align: center;
-  min-height: 38px;
-`
-
-const StyledDetail = styled.div`
-  color: ${(props) => props.theme.color.grey[100]};
-  font-size: 14px;
-`
-
-const StyledInsight = styled.div`
-  display: flex;
-  justify-content: space-between;
-  box-sizing: border-box;
-  border-radius: 8px;
-  background: transparent;
-  color: #9E9E9E;
-  width: 100%;
-  line-height: 25px;
-  font-size: 13px;
-  border: 0px solid #e6dcd5;
-  text-align: center;
-`
-
-export default FarmCards
+export default PoolsCard

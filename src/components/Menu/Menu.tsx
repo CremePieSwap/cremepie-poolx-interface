@@ -17,25 +17,25 @@ const Menu: React.FC<MenuProps> = ({ onDismiss, visible }) => {
   return (
     <StyledMenuWrapper className={isMobile ? visible ? 'show mobile': 'hide': visible ? 'show' : 'minimize'}>
       <div>
-        <StyledAbsoluteLink href="https://swap.bscex.org/#/swap">
+        <StyledAbsoluteLink href="http://212.47.235.97:9999/#/home">
           <img className='active' src={Active} alt="active" />
           <img src={Home} alt="home" />
           Home
         </StyledAbsoluteLink>
-        <StyledAbsoluteLink href="https://swap.bscex.org/#/swap">
+        <StyledAbsoluteLink href="http://212.47.235.97:9999/#/swap">
           <img className='active' src={Active} alt="active" />
           <img src={Trade} alt="trade" />
           Trade
-        </StyledAbsoluteLink>
-        <StyledAbsoluteLink href="https://swap.bscex.org/#/swap">
-          <img className='active' src={Active} alt="active" />
-          <img src={Pools} alt="pools" />
-          Pools
         </StyledAbsoluteLink>
         <StyledNavLink exact activeClassName="active" to="/" onClick={onDismiss}>
           <img className='active' src={Active} alt="active" />
           <img src={Farm} alt="pools" />
           Farm
+        </StyledNavLink>
+        <StyledNavLink exact activeClassName="active" to="/pools" onClick={onDismiss}>
+          <img className='active' src={Active} alt="active" />
+          <img src={Pools} alt="pools" />
+          Pools
         </StyledNavLink>
       </div>
     </StyledMenuWrapper>
@@ -85,10 +85,12 @@ const StyledNavLink = styled(NavLink).attrs({
     cursor: pointer;
   }
   > img {
-    width: 25px;
-    margin-right: 1rem;
+    width: 12px;
+    margin-right: 1.25rem;
+    margin-left: 0.5rem;
     &.active {
       display: none;
+      margin-left: 0;
     }
   }
 
@@ -99,7 +101,6 @@ const StyledNavLink = styled(NavLink).attrs({
         display: block;
         position: absolute;
         left: 0;
-        width: 18px;
       }
     }
 `
@@ -117,10 +118,12 @@ const StyledAbsoluteLink = styled.a`
     cursor: pointer;
   }
   > img {
-    width: 25px;
-    margin-right: 1rem;
+    width: 12px;
+    margin-right: 1.25rem;
+    margin-left: 0.5rem;
     &.active {
       display: none;
+      margin-left: 0;
     }
   }
 
@@ -130,7 +133,6 @@ const StyledAbsoluteLink = styled.a`
         display: block;
         position: absolute;
         left: 0;
-        width: 18px;
       }
     }
 `

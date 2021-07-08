@@ -30,12 +30,12 @@ const Button: React.FC<ButtonProps> = ({
   let bgColor: string
   switch (variant) {
     case 'secondary':
-      buttonColor = color.primary.main
-      bgColor = color.grey[400]
+      buttonColor = '#5B5A99'
+      bgColor = '#50E2C2'
       break
     case 'tertiary':
-      buttonColor = color.grey[500]
-      bgColor = color.grey[400]
+      buttonColor = '#5B5A99'
+      bgColor = '#BCB7F5'
       break
     case 'default':
     default:
@@ -109,7 +109,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   align-items: center;
   background-color: ${props => !props.disabled ? props.bgColor : `${props.bgColor}50`};
   border: 0;
-  border-radius: 8px;
+  border-radius: 30px;
   box-shadow: ${props => props.boxShadow};
   color: ${props => props.color};
   cursor: pointer;

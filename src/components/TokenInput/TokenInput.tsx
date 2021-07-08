@@ -22,7 +22,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
         <Box>
             <StyleBox>
                 <StyleLabel>Amount</StyleLabel>
-                <StyledMaxText>{max.toLocaleString('en-US')} {symbol}</StyledMaxText>
+                <StyledMaxText>Balance: {max.toLocaleString('en-US')}</StyledMaxText>
             </StyleBox>
             <BoxInput>
                 <Input
@@ -30,9 +30,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
                     <StyledTokenAdornmentWrapper>
                         <StyledTokenSymbol>{symbol}</StyledTokenSymbol>
                         <StyledSpacer />
-                        <div>
-                        <Button size="sm" text="Max" onClick={onSelectMax} />
-                        </div>
+                        <div className='max' onClick={onSelectMax}>MAX</div>
                     </StyledTokenAdornmentWrapper>
                     )}
                     onChange={onChange}
@@ -45,20 +43,13 @@ const TokenInput: React.FC<TokenInputProps> = ({
   )
 }
 
-/*
-            <div>
-              <Button size="sm" text="Max" />
-            </div>
-*/
 const StyleBox = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-right: 20px;
-  padding-left: 20px;
 `
 const StyleLabel = styled.div`
-  color: ${props => props.theme.color.grey[100]};
+  color: #5B5A99;
   font-weight: bold;
   width: 40%;
 `
@@ -66,9 +57,9 @@ const StyledTokenInput = styled.div`
   padding: 24px;
 `
 const Box = styled.div`
-    background-color: ${props => props.theme.color.grey[500]};
-    border-radius: 12px;
-    padding: 10px 0;
+  background-color: #F5F5FA;
+  border-radius: 20px;
+  padding: 10px 20px;
 `
 const StyledSpacer = styled.div`
   width: ${props => props.theme.spacing[3]}px;
@@ -78,16 +69,23 @@ const StyledTokenAdornmentWrapper = styled.div`
   align-items: center;
   display: flex;
   width: 60%;
+  .max {
+    font-family: SF-500;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+  }
 `
 
 const StyledMaxText = styled.div`
   align-items: center;
-  color: ${props => props.theme.color.grey[100]};
+  color: #5B5A99;
   display: flex;
   font-size: 14px;
   font-weight: 700;
   height: 44px;
   width: 60%;
+  justify-content: flex-end;
 `
 
 const StyledTokenSymbol = styled.span`
