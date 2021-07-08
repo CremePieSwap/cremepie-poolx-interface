@@ -24,8 +24,10 @@ import useAllowance from '../../../hooks/useAllowance'
 import useApprove from '../../../hooks/useApprove'
 import useModal from '../../../hooks/useModal'
 import useStake from '../../../hooks/useStake'
+import useUnstake from '../../../hooks/useUnstake'
 import useReward from '../../../hooks/useReward'
 import useTokenBalance from '../../../hooks/useTokenBalance'
+import useStakedBalance from '../../../hooks/useStakedBalance'
 import { NUMBER_BLOCKS_PER_YEAR, START_NEW_POOL_AT, PROJECTS, CONSTANT_APY, VERSIONS } from '../../../sushi/lib/constants'
 import { getEarned, getNewRewardPerBlock } from '../../../sushi/utils'
 import { bnToDec } from '../../../utils'
@@ -33,6 +35,7 @@ import { getBalanceNumber, getDisplayBalance } from '../../../utils/formatBalanc
 import ReactTooltip from 'react-tooltip'
 import Autosuggest from 'react-autosuggest'
 import DepositModal from './DepositModal'
+import WithdrawModal from './WithdrawModal'
 import { isMobile } from 'react-device-detect'
 
 import CloseIcon from '../../../assets/img/close_icon.svg'
@@ -287,11 +290,22 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
     }
   }, [onApprove])
   const tokenBalance = useTokenBalance(farm.lpContract.options.address)
+  const stakedBalance = useStakedBalance(farm.pid, farm.version)
   const { onStake } = useStake(farm.pid, farm.version, farm.decimals)
+  const { onUnstake } = useUnstake(farm.pid, farm.version, farm.decimals)
   const [onPresentDeposit] = useModal(
     <DepositModal
       max={tokenBalance}
       onConfirm={onStake}
+      tokenName={farm.lpToken.toUpperCase()}
+      decimals={farm.decimals}
+    />,
+  )
+
+  const [onPresentWithdraw] = useModal(
+    <WithdrawModal
+      max={stakedBalance}
+      onConfirm={onUnstake}
       tokenName={farm.lpToken.toUpperCase()}
       decimals={farm.decimals}
     />,
@@ -365,7 +379,10 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
           {
             !allowance.toNumber() ?
             <div className='btn' onClick={handleApprove} >Enable Farm</div> :
-            <div className='btn approved' onClick={onPresentDeposit}>Stake LP</div>
+            <div>
+              <div className='btn approved' onClick={onPresentDeposit}>Stake LP</div>
+              <div className='unstake' onClick={onPresentWithdraw}>Unstake</div>
+            </div>
           }
         </div>
         <div className='harvest'>

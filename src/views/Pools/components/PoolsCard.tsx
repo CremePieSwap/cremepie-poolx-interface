@@ -1,38 +1,31 @@
 import BigNumber from 'bignumber.js'
 import React, { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import Countdown, { CountdownRenderProps } from 'react-countdown'
+import { CountdownRenderProps } from 'react-countdown'
 import styled, { keyframes } from 'styled-components'
-import { useWallet } from 'use-wallet'
-import Button from '../../../components/Button'
 import Card from '../../../components/Card'
 import CardGray from '../../../components/CardGray'
-import CardContent from '../../../components/CardContent'
-import CardIcon from '../../../components/CardIcon'
 import Loader from '../../../components/Loader'
-import Spacer from '../../../components/Spacer'
-import Status from '../../../components/Status'
 import Value from '../../../components/Value'
 import { Farm } from '../../../contexts/Farms'
-import useAllStakedValue, { StakedValue } from '../../../hooks/useAllStakedValue'
+import useAllStakedValue from '../../../hooks/useAllStakedValue'
 import useFarms from '../../../hooks/useFarms'
 import usePoolActive from '../../../hooks/usePoolActive'
-import useRewardBalance from '../../../hooks/useRewardBalance'
 import useEarnings from '../../../hooks/useEarnings'
 import useSushi from '../../../hooks/useSushi'
 import useAllowance from '../../../hooks/useAllowance'
 import useApprove from '../../../hooks/useApprove'
 import useModal from '../../../hooks/useModal'
 import useStake from '../../../hooks/useStake'
+import useUnstake from '../../../hooks/useUnstake'
 import useReward from '../../../hooks/useReward'
 import useTokenBalance from '../../../hooks/useTokenBalance'
-import { NUMBER_BLOCKS_PER_YEAR, START_NEW_POOL_AT, PROJECTS, CONSTANT_APY, VERSIONS } from '../../../sushi/lib/constants'
-import { getEarned, getNewRewardPerBlock } from '../../../sushi/utils'
-import { bnToDec } from '../../../utils'
-import { getBalanceNumber, getDisplayBalance } from '../../../utils/formatBalance'
-import ReactTooltip from 'react-tooltip'
-import Autosuggest from 'react-autosuggest'
+import useStakedBalance from '../../../hooks/useStakedBalance'
+import { NUMBER_BLOCKS_PER_YEAR, START_NEW_POOL_AT } from '../../../sushi/lib/constants'
+import { getNewRewardPerBlock } from '../../../sushi/utils'
+import { getBalanceNumber } from '../../../utils/formatBalance'
 import DepositModal from './DepositModal'
+import WithdrawModal from './WithdrawModal'
 import { isMobile } from 'react-device-detect'
 
 import CloseIcon from '../../../assets/img/close_icon.svg'
@@ -139,7 +132,7 @@ const PoolsCard: React.FC = () => {
               <StyledRow key={i}>
                 {farmRow.map((farm, j) => (
                   <>
-                    <FarmCard farm={farm} />
+                    <PoolCard farm={farm} />
                   </>
                 ))}
               </StyledRow>
@@ -189,7 +182,7 @@ interface FarmCardProps {
   farm: FarmWithStakedValue
 }
 
-const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
+const PoolCard: React.FC<FarmCardProps> = ({ farm }) => {
   let poolActive = usePoolActive(farm.pid)
   const sushi = useSushi()
   const [newReward, setNewRewad] = useState<BigNumber>()
@@ -243,11 +236,22 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
     }
   }, [onApprove])
   const tokenBalance = useTokenBalance(farm.lpContract.options.address)
+  const stakedBalance = useStakedBalance(farm.pid, farm.version)
   const { onStake } = useStake(farm.pid, farm.version, farm.decimals)
+  const { onUnstake } = useUnstake(farm.pid, farm.version, farm.decimals)
   const [onPresentDeposit] = useModal(
     <DepositModal
       max={tokenBalance}
       onConfirm={onStake}
+      tokenName={farm.lpToken.toUpperCase()}
+      decimals={farm.decimals}
+    />,
+  )
+
+  const [onPresentWithdraw] = useModal(
+    <WithdrawModal
+      max={stakedBalance}
+      onConfirm={onUnstake}
       tokenName={farm.lpToken.toUpperCase()}
       decimals={farm.decimals}
     />,
@@ -321,7 +325,10 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
           {
             !allowance.toNumber() ?
             <div className='btn' onClick={handleApprove} >Enable Farm</div> :
-            <div className='btn approved' onClick={onPresentDeposit}>Stake LP</div>
+            <div>
+              <div className='btn approved' onClick={onPresentDeposit}>Stake token</div>
+              <div className='unstake' onClick={onPresentWithdraw}>Unstake</div>
+            </div>
           }
         </div>
         <div className='harvest'>
@@ -382,6 +389,18 @@ const MoreDetails = styled.div`
       &.approved {
         border: 1px solid #50E2C2;
         background: inherit;
+      }
+    }
+    .unstake {
+      text-align: center;
+      color: #5B5A99;
+      font-family: SF-900;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 30px;
+      cursor: pointer;
+      :hover {
+        text-decoration: underline;
       }
     }
   }
