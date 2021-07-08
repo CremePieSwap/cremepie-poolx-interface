@@ -7,51 +7,7 @@ import { supportedPools,
   ZSEED_TOKEN,
   BSCX_TOKEN,
   ZD_TOKEN,
-  TOOLS_TOKEN,
-  ZDCASH_TOKEN,
-  BNB_TOKEN,
-  BTCB_TOKEN,
-  ETH_TOKEN,
-  USDT_TOKEN,
-  VERSIONS,
-  ALPHA_TOKEN,
-  LINK_TOKEN,
-  USDC_TOKEN,
-  BUNNY_TOKEN,
-  UST_TOKEN,
-  SUSHI_TOKEN,
-  COMP_TOKEN,
-  XPO_TOKEN,
-  ATOM_TOKEN,
-  AUTO_TOKEN,
-  BRY_TOKEN,
-  DEGO_TOKEN,
-  INJ_TOKEN,
-  ALICE_TOKEN,
-  NRV_TOKEN,
-  BEL_TOKEN,
-  SWTH_TOKEN,
-  TWIN_TOKEN,
-  TKO,
-  bDIGG,
-  ARPA,
-  UNFI,
-  ITAM,
-  DOT,
-  SFP,
-  ZIL,
-  bBADGER,
-  LIT,
-  DODO,
-  BTCST,
-  IOTX,
-  LINA,
-  FRONT,
-  BARMY_TOKEN,
-  IBARMY_TOKEN,
-  BREW,
-  MLTP,
-  CORGIB
+  VERSIONS
 } from './lib/constants'
 
 BigNumber.config({
@@ -248,10 +204,6 @@ export const getTotalUserLocked = async (masterChefContract, account, pid) => {
   return masterChefContract.methods.lockOf(account, pid).call()
 }
 
-export const getTotalUserLockedV1 = async (masterChefV1Contract, account) => {
-  return masterChefV1Contract.methods.lockOf(account).call()
-}
-
 export const getLPValue = async (
   masterChefContract,
   lpContract,
@@ -282,21 +234,20 @@ export const getLPValue = async (
   let totalLockedReward = 0
   let totalPoolSupply = 0
 
-  if (version === VERSIONS.V2 || version === VERSIONS.V3) {
-    const rewardBalance = await rewardTokenContract.methods
-    .balanceOf(masterChefContract.options.address)
-    .call()
+  const rewardBalance = await rewardTokenContract.methods
+  .balanceOf(masterChefContract.options.address)
+  .call()
 
-    totalPoolSupply = await masterChefContract.methods.lpBalances(pid).call()
-    totalLockedReward = await masterChefContract.methods.totalLock(rewardToken).call()
+  totalPoolSupply = await masterChefContract.methods.lpBalances(pid).call()
+  totalLockedReward = await masterChefContract.methods.totalLock(rewardToken).call()
 
-    if (rewardToken.toLowerCase() === tokenContract._address.toLowerCase()) {
-      avaiableReward = Number(rewardBalance) - Number(totalPoolSupply) - Number(totalLockedReward)
-    } else {
-      avaiableReward = Number(rewardBalance) - Number(totalLockedReward)
-      tokenAmountWholeLP = totalPoolSupply
-    }
+  if (rewardToken.toLowerCase() === tokenContract._address.toLowerCase()) {
+    avaiableReward = Number(rewardBalance) - Number(totalPoolSupply) - Number(totalLockedReward)
+  } else {
+    avaiableReward = Number(rewardBalance) - Number(totalLockedReward)
+    tokenAmountWholeLP = totalPoolSupply
   }
+
   avaiableReward = new BigNumber(avaiableReward)
   totalLockedReward = new BigNumber(totalLockedReward)
   totalPoolSupply = new BigNumber(totalPoolSupply)
@@ -331,92 +282,6 @@ export const getLPValue = async (
     tokenPrice = prices.zseed
   } else if (tokenContract._address.toLowerCase() === ZD_TOKEN.toLowerCase()) {
     tokenPrice = prices.zd
-  } else if (tokenContract._address.toLowerCase() === TOOLS_TOKEN.toLowerCase()) {
-    tokenPrice = prices.tools
-  } else if (tokenContract._address.toLowerCase() === ZDCASH_TOKEN.toLowerCase()) {
-    tokenPrice = prices.zdcash
-  } else if (tokenContract._address.toLowerCase() === BNB_TOKEN.toLowerCase()) {
-    tokenPrice = prices.bnb
-  } else if (tokenContract._address.toLowerCase() === ETH_TOKEN.toLowerCase()) {
-    tokenPrice = prices.eth
-  } else if (tokenContract._address.toLowerCase() === BTCB_TOKEN.toLowerCase()) {
-    tokenPrice = prices.btcb
-  } else if (tokenContract._address.toLowerCase() === USDT_TOKEN.toLowerCase()) {
-    tokenPrice = prices.usdt
-  } else if (tokenContract._address.toLowerCase() === ALPHA_TOKEN.toLowerCase()) {
-    tokenPrice = prices.alpha
-  } else if (tokenContract._address.toLowerCase() === LINK_TOKEN.toLowerCase()) {
-    tokenPrice = prices.link
-  } else if (tokenContract._address.toLowerCase() === USDC_TOKEN.toLowerCase()) {
-    tokenPrice = prices.usdc
-  } else if (tokenContract._address.toLowerCase() === BUNNY_TOKEN.toLowerCase()) {
-    tokenPrice = prices.bunny
-  } else if (tokenContract._address.toLowerCase() === UST_TOKEN.toLowerCase()) {
-    tokenPrice = prices.ust
-  } else if (tokenContract._address.toLowerCase() === SUSHI_TOKEN.toLowerCase()) {
-    tokenPrice = prices.sushi
-  } else if (tokenContract._address.toLowerCase() === COMP_TOKEN.toLowerCase()) {
-    tokenPrice = prices.comp
-  } else if (tokenContract._address.toLowerCase() === XPO_TOKEN.toLowerCase()) {
-    tokenPrice = prices.xpo
-  } else if (tokenContract._address.toLowerCase() === ATOM_TOKEN.toLowerCase()) {
-    tokenPrice = prices.atom
-  } else if (tokenContract._address.toLowerCase() === AUTO_TOKEN.toLowerCase()) {
-    tokenPrice = prices.auto
-  } else if (tokenContract._address.toLowerCase() === DEGO_TOKEN.toLowerCase()) {
-    tokenPrice = prices.dego
-  } else if (tokenContract._address.toLowerCase() === INJ_TOKEN.toLowerCase()) {
-    tokenPrice = prices.inj
-  } else if (tokenContract._address.toLowerCase() === BRY_TOKEN.toLowerCase()) {
-    tokenPrice = prices.bry
-  } else if (tokenContract._address.toLowerCase() === ALICE_TOKEN.toLowerCase()) {
-    tokenPrice = prices.alice
-  } else if (tokenContract._address.toLowerCase() === NRV_TOKEN.toLowerCase()) {
-    tokenPrice = prices.nrv
-  } else if (tokenContract._address.toLowerCase() === BEL_TOKEN.toLowerCase()) {
-    tokenPrice = prices.bel
-  } else if (tokenContract._address.toLowerCase() === SWTH_TOKEN.toLowerCase()) {
-    tokenPrice = prices.swth
-  } else if (tokenContract._address.toLowerCase() === TWIN_TOKEN.toLowerCase()) {
-    tokenPrice = prices.twin
-  } else if (tokenContract._address.toLowerCase() === TKO.toLowerCase()) {
-    tokenPrice = prices.tko
-  } else if (tokenContract._address.toLowerCase() === bDIGG.toLowerCase()) {
-    tokenPrice = prices.digg
-  } else if (tokenContract._address.toLowerCase() === ARPA.toLowerCase()) {
-    tokenPrice = prices.arpa
-  } else if (tokenContract._address.toLowerCase() === UNFI.toLowerCase()) {
-    tokenPrice = prices.unfi
-  } else if (tokenContract._address.toLowerCase() === ITAM.toLowerCase()) {
-    tokenPrice = prices.itam
-  } else if (tokenContract._address.toLowerCase() === DOT.toLowerCase()) {
-    tokenPrice = prices.dot
-  } else if (tokenContract._address.toLowerCase() === SFP.toLowerCase()) {
-    tokenPrice = prices.sfp
-  } else if (tokenContract._address.toLowerCase() === ZIL.toLowerCase()) {
-    tokenPrice = prices.zil
-  } else if (tokenContract._address.toLowerCase() === bBADGER.toLowerCase()) {
-    tokenPrice = prices.bbadger
-  } else if (tokenContract._address.toLowerCase() === LIT.toLowerCase()) {
-    tokenPrice = prices.lit
-  } else if (tokenContract._address.toLowerCase() === DODO.toLowerCase()) {
-    tokenPrice = prices.dodo
-  } else if (tokenContract._address.toLowerCase() === BTCST.toLowerCase()) {
-    tokenPrice = prices.btcst
-  } else if (tokenContract._address.toLowerCase() === IOTX.toLowerCase()) {
-    tokenPrice = prices.iotx
-  } else if (tokenContract._address.toLowerCase() === LINA.toLowerCase()) {
-    tokenPrice = prices.lina
-  } else if (tokenContract._address.toLowerCase() === FRONT.toLowerCase()) {
-    tokenPrice = prices.front
-  } else if (tokenContract._address.toLowerCase() === BARMY_TOKEN.toLowerCase()) {
-    tokenPrice = prices.barmy
-  } else if (tokenContract._address.toLowerCase() === BREW.toLowerCase()) {
-    tokenPrice = prices.brew
-  } else if (tokenContract._address.toLowerCase() === MLTP.toLowerCase()) {
-    tokenPrice = prices.mltp
-  } else if (tokenContract._address.toLowerCase() === CORGIB.toLowerCase()) {
-    tokenPrice = prices.corgib
   }
 
   let rewardPrice = 0
@@ -426,25 +291,6 @@ export const getLPValue = async (
     rewardPrice = prices.zseed
   } else if (rewardToken.toLowerCase() === ZD_TOKEN.toLowerCase()) {
     rewardPrice = prices.zd
-  } else if (rewardToken.toLowerCase() === TOOLS_TOKEN.toLowerCase()) {
-    rewardPrice = prices.tools
-  } else if (rewardToken.toLowerCase() === ZDCASH_TOKEN.toLowerCase()) {
-    rewardPrice = prices.zdcash
-    console.log('rewardPrice: ', rewardPrice)
-  } else if (rewardToken.toLowerCase() === XPO_TOKEN.toLowerCase()) {
-    rewardPrice = prices.xpo
-  } else if (rewardToken.toLowerCase() === TWIN_TOKEN.toLowerCase()) {
-    rewardPrice = prices.twin
-  } else if (rewardToken.toLowerCase() === IBARMY_TOKEN.toLowerCase()) {
-    rewardPrice = prices.ibarmy
-  } else if (rewardToken.toLowerCase() === BREW.toLowerCase()) {
-    rewardPrice = prices.brew
-  } else if (rewardToken.toLowerCase() === BARMY_TOKEN.toLowerCase()) {
-    rewardPrice = prices.barmy
-  } else if (rewardToken.toLowerCase() === MLTP.toLowerCase()) {
-    rewardPrice = prices.mltp
-  } else if (rewardToken.toLowerCase() === CORGIB.toLowerCase()) {
-    rewardPrice = prices.corgib
   }
 
   tokenPrice = new BigNumber(tokenPrice)
@@ -455,7 +301,7 @@ export const getLPValue = async (
   var totalToken2Value = totalLpToken2Value.div(new BigNumber(10).pow(token2Decimals))
   var usdValue = tokenAmountTotal.times(tokenPrice).times(2)
 
-  if ((version === VERSIONS.V2 || version === VERSIONS.V3) && (token2Contract._address.toLowerCase() === tokenContract._address.toLowerCase())) {
+  if (token2Contract._address.toLowerCase() === tokenContract._address.toLowerCase()) {
     let amountToken = totalPoolSupply.div(new BigNumber(10).pow(tokenDecimals))
     usdValue = amountToken.times(tokenPrice)
   }
@@ -548,36 +394,6 @@ export const getSushiSupply = async (sushi) => {
 export const getAmountLPStakeBSCX = async (sushi, account) => {
   const lpStakeBSCX = sushi.contracts.lpStakeBSCX
   return await lpStakeBSCX.methods.balanceOf(account).call()
-}
-
-export const getRewardTokenBalance = async (sushi, project, version) => {
-  let contract = sushi.contracts.zseedContract
-
-  if (project === 'ZD') {
-    contract = sushi.contracts.zdContract
-  } else if (project === 'TOOLS') {
-    contract = sushi.contracts.toolsContract
-  } else if (project === 'ZDCASH') {
-    contract = sushi.contracts.zdcashContract
-  } else if (project === 'XPO') {
-    contract = sushi.contracts.xpoContract
-  } else if (project === 'TWIN') {
-    contract = sushi.contracts.twinContract
-  }
-
-  let masterChefAddress = sushi.contracts.masterChef
-  if (version === VERSIONS.V2) {
-    masterChefAddress = sushi.contracts.masterChefV2
-  } else if (version === VERSIONS.V3) {
-    masterChefAddress = sushi.contracts.masterChefV3
-  }
-
-  let balance = await contract.methods.balanceOf(masterChefAddress._address).call()
-  let balanceLocked = await masterChefAddress.methods.totalLocks(contract._address).call()
-  balance = Number(balance) - Number(balanceLocked)
-  balance = balance > 0 ? balance : 0
-
-  return balance
 }
 
 export const getBSCXCirculatingSupply = async (sushi) => {

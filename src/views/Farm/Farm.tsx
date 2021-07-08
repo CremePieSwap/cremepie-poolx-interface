@@ -168,13 +168,6 @@ const Farm: React.FC = () => {
             </div>
         </StyledCardsWrapper>}
         <Spacer size="lg" />
-        {!isHot &&
-          <StyledInfo style={{color: '#ff9800'}}>
-            👉 Every time you stake and unstake LP tokens, the contract will<br/>
-            automatically harvest BSCX rewards for you!
-          </StyledInfo>
-        }
-        <Spacer size="lg" />
         {!stake && <StyledCardsWrapper>
           <div>
             <div style={{color: '#ffffff', fontWeight: 'bold', fontSize: 14, marginBottom: 10}}>

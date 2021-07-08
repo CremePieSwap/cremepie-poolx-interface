@@ -22,7 +22,6 @@ import useCanUnlockAmount from '../../../hooks/useCanUnlockAmount'
 import useLockBalance from '../../../hooks/useLockBalance'
 import useUnlock from '../../../hooks/useUnlock'
 import useTotalLocked from '../../../hooks/useTotalLocked'
-import useTokenLocked from '../../../hooks/useTokenLocked'
 import useToolsLocked from '../../../hooks/useToolsLocked'
 import useReferralAmountLv1 from '../../../hooks/useReferralAmountLv1'
 import useReferralAmountLv2 from '../../../hooks/useReferralAmountLv2'
@@ -42,16 +41,9 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
   }, [onDismiss])
 
   const sushi = useSushi()
-  // const sushiBalance = useTokenBalance(getSushiAddress(sushi))
-  // const canUnlock = useCanUnlockAmount()
-  // const lockAmount = useLockBalance()
-  const totalUserLocked = useTokenLocked()
   const stakedFarms = useAllStakedFarms();
   const history = useHistory();
-  // const referAmountZSEEDLv1 = useReferralAmountLv1(ZSEED_TOKEN);
-  // const referAmountZSEEDLv2 = useReferralAmountLv2(ZSEED_TOKEN);
-  // const referAmountZDLv1 = useReferralAmountLv1(ZD_TOKEN);
-  // const referAmountZDLv2 = useReferralAmountLv2(ZD_TOKEN);
+
   const stakeLPBalance = useStakeBSCX()
   const totalRewardLocked = useTotalLocked()
   const toolsRewardLocked = useToolsLocked()
@@ -87,8 +79,6 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
   }
 
   let totalAmountInUsd = new BigNumber(0)
-  let amountInUsdBSCX = getAmountInUSD(totalUserLocked, 'BSCX')
-  totalAmountInUsd = totalAmountInUsd.plus(amountInUsdBSCX)
 
   return (
       <ModalLarge>
@@ -120,19 +110,6 @@ const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
                                     </TextMedium>
                                 </BoxItem>
                                 <BoxItem>
-                                    <Row>
-                                        <Col className="col-12">
-                                            <TextMin>
-                                                BSCX Locked
-                                            </TextMin>
-                                            <TextMedium>
-                                                {totalUserLocked ? `${parseFloat(getBalanceNumber(totalUserLocked).toFixed(2)).toLocaleString('en-US')} BSCX` : '~'}
-                                            </TextMedium>
-                                        </Col>
-                                        <ReleaseButton
-                                            disabled={true}
-                                        >{'Release'}</ReleaseButton>
-                                    </Row>
                                     <Spacer size="sm" />
                                     <TextMin>
                                         Reward Tokens Locked

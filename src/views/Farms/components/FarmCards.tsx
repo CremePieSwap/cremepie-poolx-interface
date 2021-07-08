@@ -17,7 +17,6 @@ import { Farm } from '../../../contexts/Farms'
 import useAllStakedValue, { StakedValue } from '../../../hooks/useAllStakedValue'
 import useFarms from '../../../hooks/useFarms'
 import usePoolActive from '../../../hooks/usePoolActive'
-import useRewardBalance from '../../../hooks/useRewardBalance'
 import useEarnings from '../../../hooks/useEarnings'
 import useSushi from '../../../hooks/useSushi'
 import useAllowance from '../../../hooks/useAllowance'
@@ -28,7 +27,7 @@ import useUnstake from '../../../hooks/useUnstake'
 import useReward from '../../../hooks/useReward'
 import useTokenBalance from '../../../hooks/useTokenBalance'
 import useStakedBalance from '../../../hooks/useStakedBalance'
-import { NUMBER_BLOCKS_PER_YEAR, START_NEW_POOL_AT, PROJECTS, CONSTANT_APY, VERSIONS } from '../../../sushi/lib/constants'
+import { NUMBER_BLOCKS_PER_YEAR, START_NEW_POOL_AT, PROJECTS, VERSIONS } from '../../../sushi/lib/constants'
 import { getEarned, getNewRewardPerBlock } from '../../../sushi/utils'
 import { bnToDec } from '../../../utils'
 import { getBalanceNumber, getDisplayBalance } from '../../../utils/formatBalance'
@@ -57,9 +56,6 @@ const FarmCards: React.FC = () => {
   const [farmsValue, setFarmsValue] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const stakedValue = useAllStakedValue()
-  const zdcashRewardBalance = useRewardBalance('ZDCASH', VERSIONS.V1)
-  const xpoRewardBalance = useRewardBalance('XPO', VERSIONS.V1)
-  const twinRewardBalance = useRewardBalance('TWIN', VERSIONS.V1)
 
   const [searchText, setSearchText] = useState('')
   const [farmDisplay, setFarmDisplay] = useState([])

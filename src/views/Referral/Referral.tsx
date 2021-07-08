@@ -13,7 +13,6 @@ import Icon_Tip from '../../assets/img/pro-tip-icon.svg'
 import { START_REWARD_AT_BLOCK, LP_BALANCE_LV1, LP_BALANCE_LV2 } from '../../sushi/lib/constants'
 import BscxLogo from '../../assets/img/logo-icon.svg'
 import CopyIcon from '../../assets/img/copy.png'
-import useStakeBSCX from '../../hooks/useStakeBSCX'
 import useReferrals from '../../hooks/useReferrals'
 import { getBalanceNumber } from '../../utils/formatBalance'
 
