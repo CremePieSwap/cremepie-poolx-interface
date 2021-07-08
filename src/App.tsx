@@ -20,6 +20,9 @@ import Menu from './components/Menu'
 
 const App: React.FC = () => {
   const [showMenu, setShowMenu] = useState(true)
+  useEffect(() => {
+    if (isMobile) setShowMenu(false)
+  }, [isMobile])
   localStorage.setItem('CACHE_BSC_TRY_CONNECT', '0')
   return (
     <Providers>

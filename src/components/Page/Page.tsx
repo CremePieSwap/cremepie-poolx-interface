@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import Footer from '../Footer'
+import { isMobile } from 'react-device-detect'
+
 
 const Page: React.FC = ({ children }) => (
   <StyledPage>
@@ -12,7 +14,7 @@ const Page: React.FC = ({ children }) => (
 const StyledPage = styled.div`
     padding-left: 15px;
     padding-right: 15px;
-    min-width: 940px;
+    min-width: ${isMobile ? '100%' : '940px'};
     *, *:before, *:after {
         -moz-box-sizing: border-box; 
         -webkit-box-sizing: border-box; 
