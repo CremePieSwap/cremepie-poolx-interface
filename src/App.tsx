@@ -27,7 +27,7 @@ const App: React.FC = () => {
   return (
     <Providers>
       <TopBar onClickMenu={() => setShowMenu(!showMenu)} showMenu={showMenu}/>
-      <Menu visible={showMenu}/>
+      <Menu visible={showMenu} onDismiss={() => setShowMenu(!showMenu)}/>
       <BodyWrapper showMenu={showMenu}>
         <Switch>
           <Route path="/" exact>

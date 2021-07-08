@@ -27,12 +27,12 @@ const Menu: React.FC<MenuProps> = ({ onDismiss, visible }) => {
           <img src={Trade} alt="trade" />
           Trade
         </StyledAbsoluteLink>
-        <StyledNavLink exact activeClassName="active" to="/" onClick={onDismiss}>
+        <StyledNavLink exact activeClassName="active" to="/" onClick={isMobile && onDismiss}>
           <img className='active' src={Active} alt="active" />
           <img src={Farm} alt="pools" />
           Farm
         </StyledNavLink>
-        <StyledNavLink exact activeClassName="active" to="/pools" onClick={onDismiss}>
+        <StyledNavLink exact activeClassName="active" to="/pools" onClick={isMobile && onDismiss}>
           <img className='active' src={Active} alt="active" />
           <img src={Pools} alt="pools" />
           Pools
@@ -47,7 +47,7 @@ const StyledMenuWrapper = styled.div`
   padding-top: 80px;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 8;
   background-color: #FFF;
   height: 100%;
   transition: padding-top 0.2s ease 0s, width 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0s;
