@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Page from '../../components/Page'
 import PoolsCard from './components/PoolsCard'
-import 'react-toastify/dist/ReactToastify.css'
+import {isMobile} from 'react-device-detect'
 
 declare global {
   interface Window {
@@ -40,7 +40,7 @@ const PageTitleContainer = styled.div`
 `
 
 const PageTitle = styled.div`
-  width: 940px;
+  width: ${isMobile ? '100%': '940px'};
   text-align: left;
   color: #FFFFFF;
   position: relative;

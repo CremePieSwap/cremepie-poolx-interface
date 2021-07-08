@@ -268,7 +268,78 @@ const PoolCard: React.FC<FarmCardProps> = ({ farm }) => {
 
   if (isMobile) {
     return (
-      <div></div>
+      <>
+        <FarmDetail className='mobile'
+          onClick={() => setIsShowDetail(!isShowDetail)}
+        >
+          <div className='farm-icon' style={{ display: 'flex', alignItems: 'center' }}>
+            <img style={{ height: '32px', borderRadius: '50%' }} src={farm.icon} alt='' />
+            <img style={{ height: '19px', borderRadius: '50%' }} src={farm.icon2} alt='' />
+          </div>
+          <div className='farm-name'>
+            {farm.name}
+          </div>
+          <div className='farm-title farm-earned'>
+            <div className='subtitle'>Earned</div>
+            <div className='value'><Value value={earned} /></div>
+          </div>
+          <div className='farm-title farm-APR'>
+            <div className='subtitle'>APR</div>
+            <div className='value'>{apy ? `${apy.toLocaleString('en-US')}%` : '~'}</div>
+          </div>
+        </FarmDetail>
+        {isShowDetail &&
+          <MoreDetails className='mobile'>
+            <div className='harvest'>
+              <div className='content'>
+                <div className='label'><span>{farm.rewardToken.symbol}</span> Earned</div>
+                <div className='value'><Value value={earned} /></div>
+              </div>
+              <div className='btn' onClick={handleHarvest}>Harvest</div>
+            </div>
+            <div className='enable-farm'>
+              {
+                !allowance.toNumber() ?
+                  <div className='btn' onClick={handleApprove} >Enable Farm</div> :
+                  <div className='stake-unstake'>
+                    <div className='btn approved' onClick={onPresentDeposit}>Stake LP</div>
+                    <div className='unstake' onClick={onPresentWithdraw}>Unstake</div>
+                  </div>
+              }
+            </div>
+            <div className='more-info'>
+              <div className='token-info'>
+                <div className='link-area'>
+                  <div className='item'>
+                    <a href='#'>Get {farm.lpToken}</a>
+                  </div>
+                  <div className='item'>
+                    <a
+                      href={`https://bscscan.com/address/${farm.lpTokenAddress}`}
+                      target="_blank"
+                    >View contract</a>
+                  </div>
+                </div>
+              </div>
+              <div className='farm-info'>
+                <div className='farm-title farm-liquidity'>
+                  <div className='subtitle'>Liquidity</div>
+                  <div className='value'>
+                    {farm.usdValue &&
+                      <>${parseFloat(farm.usdValue.toFixed(0)).toLocaleString('en-US')}</>
+                    }
+                  </div>
+                </div>
+                <div className='farm-title farm-mutiplier'>
+                  <div className='subtitle'>Mutiplier</div>
+                  <div className='value'>{newReward ? `${getBalanceNumber(newReward, farm.decimalsReward).toFixed(2)}x` : '~'}</div>
+                </div>
+              </div>
+            </div>
+
+          </MoreDetails>
+        }
+      </>
     )
   }
   return (
@@ -277,8 +348,8 @@ const PoolCard: React.FC<FarmCardProps> = ({ farm }) => {
       onClick={() => setIsShowDetail(!isShowDetail)}
     >
       <div className='farm-icon' style={{display: 'flex', alignItems: 'center'}}>
-        <img style={{height:'32px', borderRadius: '50%'}} src={farm.icon} alt='token'/>
-        <img style={{height:'19px', borderRadius: '50%'}} src={farm.icon2} alt='token2'/>
+        <img style={{height:'32px', borderRadius: '50%'}} src={farm.icon} alt=''/>
+        <img style={{height:'19px', borderRadius: '50%'}} src={farm.icon2} alt=''/>
       </div>
       <div className='farm-name'>
         {farm.name}
@@ -443,6 +514,41 @@ const MoreDetails = styled.div`
       cursor: pointer;
     }
   }
+  &.mobile {
+    grid-template-columns: none;
+    .harvest {
+      margin-bottom: 10px;
+    }
+    .enable-farm {
+      .btn, .stake-unstake {
+        width: 100%;
+        margin-bottom: 10px;
+        .btn {
+          margin-bottom: 0;
+        }
+      }
+    }
+    .more-info {
+      display: grid;
+      grid-template-columns: 50% 50%;
+      .farm-info {
+        .farm-title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          color: #5B5A99;
+          .subtitle {
+            font-size: 12px;
+            line-height: 23px;
+          }
+          .value {
+            font-size: 14px;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
 `
 
 const FarmDetail = styled.div`
@@ -455,6 +561,9 @@ const FarmDetail = styled.div`
   grid-template-columns: 60px 200px 100px 100px 150px 100px 100px;
   border-bottom: 1px solid #DADADA;
   cursor: pointer;
+  &.mobile {
+    grid-template-columns: 15% 35% 20% 30%;
+  }
   &:first-child {
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;

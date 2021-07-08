@@ -327,8 +327,8 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
           onClick={() => setIsShowDetail(!isShowDetail)}
         >
           <div className='farm-icon' style={{ display: 'flex', alignItems: 'center' }}>
-            <img style={{ height: '32px', borderRadius: '50%' }} src={farm.icon} alt='token' />
-            <img style={{ height: '19px', borderRadius: '50%' }} src={farm.icon2} alt='token2' />
+            <img style={{ height: '32px', borderRadius: '50%' }} src={farm.icon} alt='' />
+            <img style={{ height: '19px', borderRadius: '50%' }} src={farm.icon2} alt='' />
           </div>
           <div className='farm-name'>
             {farm.name}
@@ -402,8 +402,8 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm }) => {
         onClick={() => setIsShowDetail(!isShowDetail)}
       >
         <div className='farm-icon' style={{ display: 'flex', alignItems: 'center' }}>
-          <img style={{ height: '32px', borderRadius: '50%' }} src={farm.icon} alt='token' />
-          <img style={{ height: '19px', borderRadius: '50%' }} src={farm.icon2} alt='token2' />
+          <img style={{ height: '32px', borderRadius: '50%' }} src={farm.icon} alt='' />
+          <img style={{ height: '19px', borderRadius: '50%' }} src={farm.icon2} alt='' />
         </div>
         <div className='farm-name'>
           {farm.name}
