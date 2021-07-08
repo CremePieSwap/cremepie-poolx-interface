@@ -65,7 +65,7 @@ const FarmCards: React.FC = () => {
   const [farmDisplay, setFarmDisplay] = useState([])
   
   useEffect(() => {
-    const farms_lp = Object.values(farms).filter((farm) => farm.addLiquidityLink !== '')
+    const farms_lp = Object.values(farms).filter((farm) => !farm.stake)
     setFarmDisplay(farms_lp)
   }, [farms])
 

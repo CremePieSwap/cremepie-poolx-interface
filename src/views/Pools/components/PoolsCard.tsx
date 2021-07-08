@@ -104,7 +104,7 @@ const PoolsCard: React.FC = () => {
   };
 
   const handleSearchFarm = (e:any) => {
-    const stake_token = Object.values(farms).filter((farm) => farm.addLiquidityLink === '')
+    const stake_token = Object.values(farms).filter((farm) => farm.stake)
     if (e.target.value === '') {
       return setFarmDisplay(stake_token)
     }
