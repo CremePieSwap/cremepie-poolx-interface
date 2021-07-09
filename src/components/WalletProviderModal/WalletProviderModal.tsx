@@ -71,7 +71,6 @@ const WalletProviderModal: React.FC<ModalProps> = ({ onDismiss }) => {
               title="Metamask"
             />
           </StyledWalletCard>
-          <Spacer size="sm" />
           <StyledWalletCard>
             <WalletCard
               icon={<img src={'https://nextyezpay.s3-ap-southeast-1.amazonaws.com/zd.svg'} style={{ height: 32 }} />}
@@ -79,7 +78,6 @@ const WalletProviderModal: React.FC<ModalProps> = ({ onDismiss }) => {
               title="ezDeFi"
             />
           </StyledWalletCard>
-          <Spacer size="sm" />
           <StyledWalletCard>
             <WalletCard
               icon={<img src={trustWalletLogo} style={{ height: 32 }} />}
@@ -112,7 +110,7 @@ const WalletProviderModal: React.FC<ModalProps> = ({ onDismiss }) => {
       </ModalContent>
 
       <ModalActions>
-        <Button text="Cancel" variant="secondary" onClick={onDismiss} />
+        <Button text="Cancel" variant="tertiary" onClick={onDismiss} />
       </ModalActions>
     </Modal>
   )
@@ -131,6 +129,7 @@ const StyledWalletsWrapper = styled.div`
 const StyleError = styled.div`
   color: red;
   text-align: center;
+  padding: 10px 0;
 `
 
 const StyledWalletCard = styled.div`
@@ -139,7 +138,7 @@ const StyledWalletCard = styled.div`
 
 const StyledModalTitle = styled.div`
   align-items: center;
-  color: ${props => props.theme.color.grey[100]};
+  color: #5B5A99;
   display: flex;
   font-size: 18px;
   font-weight: 700;
